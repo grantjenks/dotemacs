@@ -117,6 +117,13 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
 
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-idle-delay 0.2)
+(setq company-backends
+      '(company-css
+        (company-dabbrev-code company-keywords)
+        company-files company-dabbrev))
+
 (add-hook 'org-mode-hook
           (lambda ()
             (setq truncate-lines nil)
