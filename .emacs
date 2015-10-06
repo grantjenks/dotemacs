@@ -1,5 +1,45 @@
-;; .emacs file
+;; # .emacs file
 ;; Copyright 2015 Grant Jenks
+;;
+;; ## Reminders
+;; M-a / M-b forward / back sentence
+;; C-M-a C-M-e begging/end of defun
+;; M-r cycle positions in window (middle-top-bottom)
+;; C-SPC C-SPC set mark and disable region
+;; C-u C-SPC jump to the mark
+;; C-x r (m|b|l) registers/bookmarks
+;; C-x r s [name] save region to register
+;; C-x r i [name] insert region from register
+;;
+;; ### Shell commands
+;; M-! execute shell command
+;; M-& execute shell command async
+;; M-| send region to shell command
+;; With C-u, output command to buffer
+;;
+;; ansi-term might replace xterm
+;;
+;; Configure flymake for Python
+;; (setq pylint "epylint")
+;; (when (load "flymake" t)
+;;   (defun flymake-pylint-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list (expand-file-name pylint "") (list local-file))))
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pylint-init)))
+;; (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+;;     (setq flymake-check-was-interrupted t))
+;; (ad-activate 'flymake-post-syntax-check)
+
+;; ;; Set as a minor mode for Python
+;; (add-hook 'python-mode-hook '(lambda () (flymake-mode)))
+;;
+;; ## Todo
+;; Email: http://stackoverflow.com/questions/20979918/reading-email-from-gmail-in-emacs-24
 
 (add-to-list 'load-path (file-name-directory load-file-name))
 (add-to-list 'custom-theme-load-path (concat (file-name-directory load-file-name) "/themes"))
@@ -119,6 +159,8 @@
 
 (add-hook 'after-init-hook 'global-company-mode)
 (setq company-idle-delay 0.2)
+(setq company-dabbrev-code-modes t)
+(setq company-dabbrev-code-everywhere t)
 (setq company-backends
       '(company-css
         (company-dabbrev-code company-keywords)
@@ -133,6 +175,7 @@
 (require 'ido)
 (ido-mode t)
 (setq ido-use-virtual-buffers t)
+(setq ido-enable-flex-matching t)
 
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
@@ -142,6 +185,7 @@
 (autoload 'web-mode "web-mode"
   "Major mode for editing web files" t)
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (setq web-mode-engines-alist
       '(("django" . "\\.html\\'"))
 )
