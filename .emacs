@@ -1,7 +1,9 @@
-;; # .emacs file
+;; # Emacs Config File: .emacs
+;;
 ;; Copyright 2015 Grant Jenks
 ;;
 ;; ## Reminders
+;;
 ;; M-a / M-b forward / back sentence
 ;; C-M-a C-M-e begging/end of defun
 ;; M-r cycle positions in window (middle-top-bottom)
@@ -12,34 +14,12 @@
 ;; C-x r i [name] insert region from register
 ;;
 ;; ### Shell commands
+;;
 ;; M-! execute shell command
 ;; M-& execute shell command async
 ;; M-| send region to shell command
 ;; With C-u, output command to buffer
 ;;
-;; ansi-term might replace xterm
-;;
-;; Configure flymake for Python
-;; (setq pylint "epylint")
-;; (when (load "flymake" t)
-;;   (defun flymake-pylint-init ()
-;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                        'flymake-create-temp-inplace))
-;;            (local-file (file-relative-name
-;;                         temp-file
-;;                         (file-name-directory buffer-file-name))))
-;;       (list (expand-file-name pylint "") (list local-file))))
-;;   (add-to-list 'flymake-allowed-file-name-masks
-;;                '("\\.py\\'" flymake-pylint-init)))
-;; (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
-;;     (setq flymake-check-was-interrupted t))
-;; (ad-activate 'flymake-post-syntax-check)
-
-;; ;; Set as a minor mode for Python
-;; (add-hook 'python-mode-hook '(lambda () (flymake-mode)))
-;;
-;; ## Todo
-;; Email: http://stackoverflow.com/questions/20979918/reading-email-from-gmail-in-emacs-24
 
 (add-to-list 'load-path (file-name-directory load-file-name))
 (add-to-list 'custom-theme-load-path (concat (file-name-directory load-file-name) "/themes"))
@@ -145,7 +125,7 @@
       (while (< (point) end) (if (forward-word 1) (setq n (1+ n)))))
     (message "%3d %3d %3d" (count-lines start end) n (- end start))))
 
-(defun uniquify-region-lines (beg end)
+(defun unique-region-lines (beg end)
   "Remove duplicate adjacent lines in region."
   (interactive "*r")
   (save-excursion
@@ -153,10 +133,10 @@
     (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
       (replace-match "\\1"))))
 
-(defun uniquify-buffer-lines ()
-  "Remove duplicate adjacent lines in the current buffer."
+(defun unique-buffer-lines ()
+  "Remove duplicate adjacent lines in current buffer."
   (interactive)
-  (uniquify-region-lines (point-min) (point-max)))
+  (unique-region-lines (point-min) (point-max)))
 
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
