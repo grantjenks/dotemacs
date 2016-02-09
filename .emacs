@@ -52,6 +52,8 @@
 (defalias 'qrr 'query-replace-regexp)
 (defalias 'lml 'list-matching-lines)
 (defalias 'rb 'revert-buffer)
+(defalias 'dtw 'delete-trailing-whitespace)
+(defalias 'bw 'balance-windows)
 
 (global-set-key (kbd "C-h a") 'apropos)
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
