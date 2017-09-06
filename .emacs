@@ -1,6 +1,6 @@
 ;; # Emacs Config File: .emacs
 ;;
-;; Copyright 2015 Grant Jenks
+;; Copyright 2015-2017 Grant Jenks
 ;;
 ;; ## Reminders
 ;;
@@ -20,26 +20,34 @@
 ;; M-| send region to shell command
 ;; With C-u, output command to buffer
 ;;
+;; ### Elisp Commands
+;;
+;; M-: eval-expression
+;; C-x C-e eval-last-sexp
+;; [C-u] C-M-x [debug] eval-defun
+;;
 
-(add-to-list 'load-path (file-name-directory load-file-name))
-(add-to-list 'custom-theme-load-path (concat (file-name-directory load-file-name) "/themes"))
+(setq dotemacs-directory (file-name-directory load-file-name))
+(setq themes-directory (concat dotemacs-directory "/" "themes"))
+(add-to-list 'load-path dotemacs-directory)
 
-(load-theme 'solarized t)
+(add-to-list 'custom-theme-load-path themes-directory)
+(cond ((display-graphic-p) (load-theme 'solarized t))
+      (t (load-theme 'whiteboard)))
 
 (setq frame-title-format "%b")
-(setq gc-cons-threshold 20000000)
 (setq inhibit-startup-screen t)
 (setq mac-command-modifier 'control)
 (setq visible-bell nil)
-(setq ring-bell-function (lambda ()
-                           (invert-face 'mode-line)
-                           (run-with-timer 0.1 nil 'invert-face 'mode-line)))
+(setq ring-bell-function
+      (lambda ()
+        (invert-face 'mode-line)
+        (run-with-timer 0.1 nil 'invert-face 'mode-line)))
 (setq-default truncate-lines t)
 (setq-default indent-tabs-mode nil)
 (setq-default fill-column 79)
-(setq initial-scratch-message ";;# M-: (eval-expression) C-x C-e (eval-last-sexp) [C-u] C-M-x [debug] (eval-defun)
-
-")
+(setq initial-major-mode 'text-mode)
+(setq initial-scratch-message "")
 
 (delete-selection-mode 1)
 (blink-cursor-mode -1)
@@ -54,6 +62,8 @@
 (defalias 'rb 'revert-buffer)
 (defalias 'dtw 'delete-trailing-whitespace)
 (defalias 'bw 'balance-windows)
+(defalias 'cr 'comment-region)
+(defalias 'ucr 'uncomment-region)
 
 (global-set-key (kbd "C-h a") 'apropos)
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
@@ -103,18 +113,6 @@
    (if mark-active (list (region-beginning) (region-end))
      (list (line-beginning-position)
            (line-beginning-position 2)))))
-
-(defvar findstr-args-history nil)
-(defun findstr (dir cmd)
-  "Windows findstr.exe like rgrep."
-  (interactive
-   (list
-    (read-from-minibuffer "Directory: " default-directory)
-    (read-from-minibuffer "Arguments: " nil nil nil 'findstr-args-history)))
-  (setq old-default-directory default-directory)
-  (cd dir)
-  (compilation-start (format "findstr.exe %s" cmd) 'grep-mode)
-  (cd old-default-directory))
 
 (defun wc (&optional start end)
   "Prints number of lines, words and characters in region or whole buffer."
@@ -175,21 +173,12 @@
 (setq web-mode-engines-alist
       '(("django" . "\\.html\\'"))
 )
-(defun gmj-web-mode-hook ()
-  "Hooks for web-mode."
-  (setq web-mode-markup-indent-offset 2))
-(add-hook 'web-mode-hook  'gmj-web-mode-hook)
+(add-hook 'web-mode-hook
+          (lambda ()
+            (setq web-mode-markup-indent-offset 2)))
 
-(require 'hippie-exp)
-(setq hippie-expand-try-functions-list
-              (quote (try-expand-all-abbrevs
-                      try-expand-line
-                      try-expand-dabbrev
-                      try-expand-dabbrev-visible)))
+(defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
-(defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap.")
-
-(define-key gmj-keys-minor-mode-map (kbd "M-SPC") 'hippie-expand)
 (define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
 (define-key gmj-keys-minor-mode-map (kbd "C-M-9") 'windmove-right)
 (define-key gmj-keys-minor-mode-map (kbd "C-M-7") 'windmove-up)
@@ -201,10 +190,9 @@
 
 (gmj-keys-minor-mode 1)
 
-;; Disable my key settings in the minibuffer.
-(defun gmj-minibuffer-setup-hook ()
-  (gmj-keys-minor-mode 0))
-(add-hook 'minibuffer-setup-hook 'gmj-minibuffer-setup-hook)
+(add-hook 'minibuffer-setup-hook
+          (lambda ()
+            (gmj-keys-minor-mode 0)))
 
 ;; In order for the above to work in more cases (like flyspell):
 (defadvice load (after give-gmj-keybindings-priority)
