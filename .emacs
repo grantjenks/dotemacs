@@ -177,6 +177,8 @@
           (lambda ()
             (setq web-mode-markup-indent-offset 2)))
 
+(add-to-list 'auto-mode-alist '("\\.css_t\\'" . css-mode))
+
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
 (define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
