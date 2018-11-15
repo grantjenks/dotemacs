@@ -1,14 +1,16 @@
 ;; # Emacs Config File: .emacs
+;; Copyright 2015-2018 Grant Jenks
 ;;
-;; Copyright 2015-2017 Grant Jenks
+;; TODO
+;; https://stackoverflow.com/questions/12058717/confusing-about-the-emacs-custom-system
 ;;
 ;; ## Reminders
 ;;
+;; C-SPC C-SPC set mark and disable region
+;; C-u C-SPC jump to the mark
 ;; M-a / M-b forward / back sentence
 ;; C-M-a C-M-e begging/end of defun
 ;; M-r cycle positions in window (middle-top-bottom)
-;; C-SPC C-SPC set mark and disable region
-;; C-u C-SPC jump to the mark
 ;; C-x r (m|b|l) registers/bookmarks
 ;; C-x r s [name] save region to register
 ;; C-x r i [name] insert region from register
@@ -28,7 +30,7 @@
 ;;
 
 (setq dotemacs-directory (file-name-directory load-file-name))
-(setq themes-directory (concat dotemacs-directory "/" "themes"))
+(setq themes-directory (concat dotemacs-directory "themes"))
 (add-to-list 'load-path dotemacs-directory)
 
 (add-to-list 'custom-theme-load-path themes-directory)
@@ -92,12 +94,42 @@
 (setq scroll-conservatively 10000)
 (setq scroll-preserve-screen-position t)
 
+;; Setup MELPA.
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
+
+(custom-set-variables
+ ;; '(custom-safe-themes
+ ;;   (quote
+ ;;    ("31a01668c84d03862a970c471edbd377b2430868eccf5e8a9aec6831f1a0908d" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "1297a022df4228b81bc0436230f211bad168a117282c20ddcba2db8c6a200743" default)))
+ '(package-selected-packages (quote (company-tabnine popup ctable concurrent company))))
+
 ;; Move buffers around.
 (require 'buffer-move)
 (global-set-key (kbd "C-M-^") 'buf-move-left)
 (global-set-key (kbd "C-M-(") 'buf-move-right)
 (global-set-key (kbd "C-M-&") 'buf-move-up)
 (global-set-key (kbd "C-M-*") 'buf-move-down)
+
+(eval-after-load "grep"
+  '(progn
+     (add-to-list 'grep-find-ignored-files ".coverage")
+     (add-to-list 'grep-find-ignored-directories ".tox")
+     (add-to-list 'grep-find-ignored-directories "env27")
+     (add-to-list 'grep-find-ignored-directories "env34")
+     (add-to-list 'grep-find-ignored-directories "env35")
+     (add-to-list 'grep-find-ignored-directories "env36")
+     (add-to-list 'grep-find-ignored-directories "env37")
+     (add-to-list 'grep-find-ignored-directories "env")))
 
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
@@ -148,7 +180,10 @@
 (setq company-backends
       '(company-css
         (company-dabbrev-code company-keywords)
-        company-files company-dabbrev))
+        company-files
+        company-dabbrev))
+(require 'company-tabnine)
+(add-to-list 'company-backends 'company-tabnine)
 
 (add-hook 'org-mode-hook
           (lambda ()
@@ -160,6 +195,11 @@
 (ido-mode t)
 (setq ido-use-virtual-buffers t)
 (setq ido-enable-flex-matching t)
+
+(setq c-basic-offset 2)
+(setq c-default-style '((java-mode . "java")
+                        (awk-mode . "awk")
+                        (other . "stroustrup")))
 
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
