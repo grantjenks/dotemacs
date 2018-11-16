@@ -69,6 +69,7 @@
 
 (global-set-key (kbd "C-h a") 'apropos)
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Store backups in one place.
 (setq
