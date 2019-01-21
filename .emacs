@@ -1,8 +1,8 @@
 ;; # Emacs Config File: .emacs
-;; Copyright 2015-2018 Grant Jenks
+;; Copyright 2015-2019 Grant Jenks
 ;;
 ;; TODO
-;; https://stackoverflow.com/questions/12058717/confusing-about-the-emacs-custom-system
+;; https://stackoverflow.com/questions/12058717/
 ;;
 ;; ## Reminders
 ;;
@@ -129,8 +129,20 @@
      (add-to-list 'grep-find-ignored-directories "env34")
      (add-to-list 'grep-find-ignored-directories "env35")
      (add-to-list 'grep-find-ignored-directories "env36")
+     (add-to-list 'grep-find-ignored-directories "env36alt")
      (add-to-list 'grep-find-ignored-directories "env37")
      (add-to-list 'grep-find-ignored-directories "env")))
+
+(defun rgrepo (regexp &optional files dir confirm)
+  "Wrap rgrep to temporarily add -o to grep-find-template."
+  (interactive (advice-eval-interactive-spec
+                (cadr (interactive-form #'rgrep))))
+  (let ((original-grep-find-template grep-find-template)
+        (new-grep-find-template
+         (replace-regexp-in-string "<C>" "<C> -o" grep-find-template)))
+    (setq grep-find-template new-grep-find-template)
+    (apply #'rgrep regexp files dir confirm)
+    (setq grep-find-template original-grep-find-template)))
 
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
@@ -183,8 +195,8 @@
         (company-dabbrev-code company-keywords)
         company-files
         company-dabbrev))
-(require 'company-tabnine)
-(add-to-list 'company-backends 'company-tabnine)
+;; (require 'company-tabnine)
+;; (add-to-list 'company-backends 'company-tabnine)
 
 (add-hook 'org-mode-hook
           (lambda ()
