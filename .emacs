@@ -214,6 +214,21 @@
                         (awk-mode . "awk")
                         (other . "stroustrup")))
 
+;; TODO: Setup C-c C-c to use %run command.
+;; TODO: Setup ipython command to run IPython inside term.
+;; (setq python-shell-interpreter
+;;       "/Library/Frameworks/Python.framework/Versions/3.7/bin/ipython3")
+;; (setq python-shell-interpreter-args
+;;       "--colors=Linux --profile=default --simple-prompt")
+;; (setq python-shell-prompt-regexp "In \\[[0-9]+\\]: ")
+;; (setq python-shell-prompt-output-regexp "Out \\[[0-9]+\\]: ")
+;; (setq python-shell-completion-setup-code
+;;       "from IPython.core.completerlib import module_completion")
+;; (setq python-shell-completion-module-string-code
+;;       "';'.join(module_completion('''%s'''))\n")
+;; (setq python-shell-completion-string-code
+;;       "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
