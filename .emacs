@@ -1,9 +1,6 @@
 ;; # Emacs Config File: .emacs
 ;; Copyright 2015-2019 Grant Jenks
 ;;
-;; TODO
-;; https://stackoverflow.com/questions/12058717/
-;;
 ;; ## Reminders
 ;;
 ;; C-SPC C-SPC set mark and disable region
@@ -14,6 +11,13 @@
 ;; C-x r (m|b|l) registers/bookmarks
 ;; C-x r s [name] save region to register
 ;; C-x r i [name] insert region from register
+;;
+;; ### Upgrade Packages
+;;
+;; 1. (package-refresh-contents)
+;; 2. (pakcage-list-packages)
+;; 3. U  ; Select packages for upgrades.
+;; 4. x  ; Upgrade packages.
 ;;
 ;; ### Shell commands
 ;;
@@ -27,12 +31,11 @@
 ;; M-: eval-expression
 ;; C-x C-e eval-last-sexp
 ;; [C-u] C-M-x [debug] eval-defun
-;;
 
 (setq dotemacs-directory (file-name-directory load-file-name))
-(setq themes-directory (concat dotemacs-directory "themes"))
 (add-to-list 'load-path dotemacs-directory)
 
+(setq themes-directory (concat dotemacs-directory "themes"))
 (add-to-list 'custom-theme-load-path themes-directory)
 (cond ((display-graphic-p) (load-theme 'solarized t))
       (t (load-theme 'whiteboard)))
@@ -100,19 +103,49 @@
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
-(custom-set-variables
- ;; '(custom-safe-themes
- ;;   (quote
- ;;    ("31a01668c84d03862a970c471edbd377b2430868eccf5e8a9aec6831f1a0908d" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "1297a022df4228b81bc0436230f211bad168a117282c20ddcba2db8c6a200743" default)))
- '(package-selected-packages (quote (company-tabnine popup ctable concurrent company))))
+;; Install selected packages.
+(setq package-selected-packages
+      '(
+        buffer-move
+        company
+        concurrent
+        cython-mode
+        expand-region
+        magit
+        markdown-mode
+        php-mode
+        popup
+        web-mode
+        yaml-mode
+        ))
+(defun install-packages ()
+  "Install all selected packages."
+  (interactive)
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (dolist (package package-selected-packages)
+    (unless (package-installed-p package)
+      (package-install package))))
+(install-packages)
+
+;; Old findstr.exe command.
+;(defvar findstr-args-history nil)
+;(defun findstr (dir cmd)
+;  "Windows findstr.exe like rgrep."
+;  (interactive
+;   (list
+;    (read-from-minibuffer "Directory: " default-directory)
+;    (read-from-minibuffer "Arguments: " nil nil nil 'findstr-args-history)))
+;  (setq old-default-directory default-directory)
+;  (cd dir)
+;  (compilation-start (format "findstr.exe %s" cmd) 'grep-mode)
+;  (cd old-default-directory))
 
 ;; Move buffers around.
 (require 'buffer-move)
@@ -131,6 +164,7 @@
      (add-to-list 'grep-find-ignored-directories "env36")
      (add-to-list 'grep-find-ignored-directories "env36alt")
      (add-to-list 'grep-find-ignored-directories "env37")
+     (add-to-list 'grep-find-ignored-directories "venv")
      (add-to-list 'grep-find-ignored-directories "env")))
 
 (defun rgrepo (regexp &optional files dir confirm)
@@ -170,7 +204,7 @@
       (while (< (point) end) (if (forward-word 1) (setq n (1+ n)))))
     (message "%3d %3d %3d" (count-lines start end) n (- end start))))
 
-(defun unique-region-lines (beg end)
+(defun uniq-region-lines (beg end)
   "Remove duplicate adjacent lines in region."
   (interactive "*r")
   (save-excursion
@@ -178,7 +212,7 @@
     (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
       (replace-match "\\1"))))
 
-(defun unique-buffer-lines ()
+(defun uniq-buffer-lines ()
   "Remove duplicate adjacent lines in current buffer."
   (interactive)
   (unique-region-lines (point-min) (point-max)))
@@ -195,8 +229,6 @@
         (company-dabbrev-code company-keywords)
         company-files
         company-dabbrev))
-;; (require 'company-tabnine)
-;; (add-to-list 'company-backends 'company-tabnine)
 
 (add-hook 'org-mode-hook
           (lambda ()
