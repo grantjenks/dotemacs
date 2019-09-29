@@ -117,10 +117,12 @@
         concurrent
         cython-mode
         expand-region
+        ; lsp-mode
         magit
         markdown-mode
         php-mode
         popup
+        ; pyvenv  ;; Consider virtualenvwrapper instead!
         web-mode
         yaml-mode
         ))
@@ -133,6 +135,14 @@
     (unless (package-installed-p package)
       (package-install package))))
 (install-packages)
+
+;; (require 'lsp-mode)
+;; (add-hook 'python-mode-hook #'lsp-deferred)
+;; https://github.com/tigersoldier/company-lsp
+;; https://github.com/emacs-lsp/dap-mode#python
+;; https://github.com/emacs-lsp/lsp-ui
+;; https://github.com/emacs-lsp/lsp-treemacs
+;; https://github.com/bbatsov/projectile
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
