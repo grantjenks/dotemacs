@@ -75,6 +75,7 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Configure backups.
+(require 'tramp)
 (setq backup-by-copying t
       delete-old-versions t
       kept-new-versions 5
