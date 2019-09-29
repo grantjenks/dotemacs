@@ -126,12 +126,13 @@
         concurrent
         cython-mode
         expand-region
-        ; lsp-mode
+        lsp-mode
         magit
         markdown-mode
         php-mode
         popup
-        ; pyvenv  ;; Consider virtualenvwrapper instead!
+        projectile
+        pyvenv
         web-mode
         yaml-mode
         ))
@@ -151,7 +152,6 @@
 ;; https://github.com/emacs-lsp/dap-mode#python
 ;; https://github.com/emacs-lsp/lsp-ui
 ;; https://github.com/emacs-lsp/lsp-treemacs
-;; https://github.com/bbatsov/projectile
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
@@ -196,6 +196,13 @@
     (setq grep-find-template new-grep-find-template)
     (apply #'rgrep regexp files dir confirm)
     (setq grep-find-template original-grep-find-template)))
+
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(require 'projectile)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(projectile-mode t)
 
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
