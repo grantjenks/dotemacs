@@ -74,14 +74,22 @@
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;; Store backups in one place.
-(setq
-   backup-by-copying t
-   backup-directory-alist '(("." . "~/.backups"))
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)
+;; Configure backups.
+(setq backup-by-copying t
+      delete-old-versions t
+      kept-new-versions 5
+      kept-old-versions 2
+      version-control t)
+(let ((backup-dir "~/.emacs-backups")
+      (auto-saves-dir "~/.emacs-saves/"))
+  (dolist (dir (list backup-dir auto-saves-dir))
+    (when (not (file-directory-p dir))
+      (make-directory dir t)))
+  (setq auto-save-file-name-transforms `((".*" ,auto-saves-dir t))
+        auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
+        backup-directory-alist `(("." . ,backup-dir))
+        tramp-auto-save-directory auto-saves-dir)
+        tramp-backup-directory-alist `((".*" . ,backup-dir)))
 
 ;; Hide window bars.
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
