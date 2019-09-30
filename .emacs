@@ -202,6 +202,12 @@
 
 (require 'projectile)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(setq projectile-project-search-path '("~/repos/"))
+(setq projectile-sort-order 'recently-active)
+(setq projectile-switch-project-action
+      '(lambda ()
+         (message "Changing to project: %s" default-directory)
+         (projectile-dired)))
 (projectile-mode t)
 
 (defadvice kill-ring-save (before slick-copy activate compile)
