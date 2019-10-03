@@ -146,7 +146,9 @@
       (package-install package))))
 (install-packages)
 
-;; (require 'lsp-mode)
+(require 'lsp-mode)
+(setq lsp-enable-snippet nil)
+(setq lsp-pyls-configuration-sources ["flake8"])
 ;; (add-hook 'python-mode-hook #'lsp-deferred)
 ;; https://github.com/tigersoldier/company-lsp
 ;; https://github.com/emacs-lsp/dap-mode#python
