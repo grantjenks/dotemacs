@@ -148,6 +148,7 @@
 
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
+(setq lsp-prefer-flymake :none)
 (setq lsp-pyls-configuration-sources ["flake8"])
 ;; (add-hook 'python-mode-hook #'lsp-deferred)
 ;; https://github.com/tigersoldier/company-lsp
