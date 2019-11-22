@@ -297,6 +297,10 @@
 ;; (setq python-shell-completion-string-code
 ;;       "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
+(require 'ediff)
+(setq ediff-split-window-function 'split-window-horizontally)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
