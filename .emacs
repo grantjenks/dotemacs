@@ -328,6 +328,11 @@
 
 (add-to-list 'auto-mode-alist '("\\.css_t\\'" . css-mode))
 
+(defun linkedin/mint-build ()
+  (interactive)
+  (compile "/bin/bash -ic \"mint build\""))
+(global-set-key (kbd "<f5>") 'linkedin/mint-build)
+
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
 (define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
