@@ -2,6 +2,10 @@
 ;;
 ;; Copyright 2015-2020 Grant Jenks
 ;;
+;; ## Setup
+;;
+;;     $ cat ~/.emacs
+;;     (load-file "~/repos/dotemacs/.emacs")
 ;;
 ;; ## Reminders
 ;;
