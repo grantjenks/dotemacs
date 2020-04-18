@@ -134,7 +134,7 @@
         company
         concurrent
         cython-mode
-        ;; emojify
+        emojify
         expand-region
         lsp-mode
         magit
