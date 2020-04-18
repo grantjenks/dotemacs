@@ -60,11 +60,12 @@
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
 
-(delete-selection-mode 1)
 (blink-cursor-mode -1)
-(show-paren-mode 1)
 (column-number-mode 1)
+(delete-selection-mode 1)
 (recentf-mode 1)
+(save-place-mode 1)
+(show-paren-mode 1)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'qr 'query-replace)
@@ -79,6 +80,7 @@
 (global-set-key (kbd "C-h a") 'apropos)
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; Configure backups.
 (require 'tramp)
@@ -102,6 +104,7 @@
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'horizontal-scroll-bar-mode) (horizontal-scroll-bar-mode -1))
 
 ;; Use utf-8 everywhere.
 (set-terminal-coding-system 'utf-8)
