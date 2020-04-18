@@ -38,8 +38,8 @@
 ;; C-x C-e eval-last-sexp
 ;; [C-u] C-M-x [debug] eval-defun
 
-(setq dotemacs-directory (file-name-directory load-file-name))
-(add-to-list 'load-path dotemacs-directory)
+;; (setq dotemacs-directory (file-name-directory load-file-name))
+;; (add-to-list 'load-path dotemacs-directory)
 
 ;; (setq themes-directory (concat dotemacs-directory "themes"))
 ;; (add-to-list 'custom-theme-load-path themes-directory)
