@@ -333,6 +333,12 @@
   (compile "/bin/bash -ic \"mint build\""))
 (global-set-key (kbd "<f5>") 'linkedin/mint-build)
 
+(defun linkedin/git-review-create (testing bugs)
+  (interactive "sTesting: \nsBugs: ")
+  (compile
+   (format "/bin/bash -ic \"git review create --no-prompt --owners --open --testing-done \\\"%s\\\" --bugs \\\"%s\\\"\"" testing bugs)))
+(global-set-key (kbd "C-c l r c") 'linkedin/git-review-create)
+
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
 (define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
