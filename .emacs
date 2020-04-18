@@ -141,6 +141,7 @@
         projectile
         pyvenv
         solarized-theme
+        typo
         web-mode
         yaml-mode
         ))
@@ -155,6 +156,8 @@
 (install-packages)
 
 (load-theme 'solarized-light t)
+
+(add-hook 'text-mode-hook 'typo-mode)
 
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
