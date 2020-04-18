@@ -1,5 +1,7 @@
 ;; # Emacs Config File: .emacs
-;; Copyright 2015-2019 Grant Jenks
+;;
+;; Copyright 2015-2020 Grant Jenks
+;;
 ;;
 ;; ## Reminders
 ;;
