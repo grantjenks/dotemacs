@@ -41,10 +41,10 @@
 (setq dotemacs-directory (file-name-directory load-file-name))
 (add-to-list 'load-path dotemacs-directory)
 
-(setq themes-directory (concat dotemacs-directory "themes"))
-(add-to-list 'custom-theme-load-path themes-directory)
-(cond ((display-graphic-p) (load-theme 'solarized t))
-      (t (load-theme 'whiteboard)))
+;; (setq themes-directory (concat dotemacs-directory "themes"))
+;; (add-to-list 'custom-theme-load-path themes-directory)
+;; (cond ((display-graphic-p) (load-theme 'solarized t))
+;;       (t (load-theme 'whiteboard)))
 
 (setq frame-title-format "%b")
 (setq inhibit-startup-screen t)
@@ -139,6 +139,7 @@
         popup
         projectile
         pyvenv
+        solarized-theme
         web-mode
         yaml-mode
         ))
@@ -151,6 +152,8 @@
     (unless (package-installed-p package)
       (package-install package))))
 (install-packages)
+
+(load-theme 'solarized-light t)
 
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
