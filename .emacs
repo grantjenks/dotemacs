@@ -136,6 +136,7 @@
         cython-mode
         emojify
         expand-region
+        ivy
         lsp-mode
         magit
         markdown-mode
@@ -144,6 +145,7 @@
         projectile
         pyvenv
         solarized-theme
+        swiper
         typo
         web-mode
         yaml-mode
@@ -288,10 +290,17 @@
             (setq word-wrap t)
             (setq org-cycle-include-plain-lists t)))
 
-(require 'ido)
-(ido-mode t)
-(setq ido-use-virtual-buffers t)
-(setq ido-enable-flex-matching t)
+;; (require 'ido)
+;; (ido-mode t)
+;; (setq ido-use-virtual-buffers t)
+;; (setq ido-enable-flex-matching t)
+
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "C-c r") 'ivy-resume)
+(setq ivy-use-selectable-prompt t)
 
 (setq c-basic-offset 2)
 (setq c-default-style '((java-mode . "java")
