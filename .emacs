@@ -290,17 +290,18 @@
             (setq word-wrap t)
             (setq org-cycle-include-plain-lists t)))
 
-;; (require 'ido)
-;; (ido-mode t)
-;; (setq ido-use-virtual-buffers t)
-;; (setq ido-enable-flex-matching t)
-
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
+(require 'ido)
+(ido-mode t)
+(setq ido-use-virtual-buffers t)
+(setq ido-enable-flex-matching t)
 (setq enable-recursive-minibuffers t)
-(global-set-key (kbd "C-s") 'swiper)
+
+(require 'ivy)
+;; (ivy-mode 1)
+(global-set-key (kbd "C-M-s") 'swiper)
 (global-set-key (kbd "C-c r") 'ivy-resume)
 (setq ivy-use-selectable-prompt t)
+(setq ivy-use-virtual-buffers t)
 
 (setq c-basic-offset 2)
 (setq c-default-style '((java-mode . "java")
