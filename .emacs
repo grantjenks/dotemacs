@@ -141,6 +141,7 @@
         lsp-mode
         magit
         markdown-mode
+        org-bullets
         php-mode
         popup
         projectile
@@ -290,11 +291,13 @@
         company-files
         company-dabbrev))
 
+(require 'org-bullets)
 (add-hook 'org-mode-hook
           (lambda ()
             (setq truncate-lines nil)
             (setq word-wrap t)
-            (setq org-cycle-include-plain-lists t)))
+            (setq org-cycle-include-plain-lists t)
+            (org-bullets-mode 1)))
 (custom-theme-set-faces
  'solarized-light
  `(org-level-1 ((t (:weight bold :foreground "#268bd2"))))
