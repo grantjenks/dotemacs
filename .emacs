@@ -147,7 +147,6 @@
         pyvenv
         solarized-theme
         swiper
-        typo
         web-mode
         yaml-mode
         ))
