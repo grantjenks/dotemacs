@@ -170,8 +170,6 @@
 (setq solarized-height-plus-4 1.0)
 (load-theme 'solarized-light t)
 
-(add-hook 'text-mode-hook 'typo-mode)
-
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake :none)
