@@ -131,6 +131,7 @@
 (setq package-selected-packages
       '(
         buffer-move
+        csv-mode
         company
         concurrent
         cython-mode
