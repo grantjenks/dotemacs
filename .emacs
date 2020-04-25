@@ -297,6 +297,16 @@
             (setq truncate-lines nil)
             (setq word-wrap t)
             (setq org-cycle-include-plain-lists t)))
+(custom-theme-set-faces
+ 'solarized-light
+ `(org-level-1 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-2 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-3 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-4 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-5 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-6 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-7 ((t (:weight bold :foreground "#268bd2"))))
+ `(org-level-8 ((t (:weight bold :foreground "#268bd2")))))
 
 (require 'ido)
 (ido-mode t)
