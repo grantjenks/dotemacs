@@ -46,6 +46,10 @@
 ;; (cond ((display-graphic-p) (load-theme 'solarized t))
 ;;       (t (load-theme 'whiteboard)))
 
+(let ((local-bin-dir (expand-file-name "~/.local/bin")))
+  (setenv "PATH" (concat (getenv "PATH") (concat ":" local-bin-dir)))
+  (setq exec-path (append exec-path (list local-bin-dir))))
+
 (setq frame-title-format "%b")
 (setq inhibit-startup-screen t)
 (setq mac-command-modifier 'control)
