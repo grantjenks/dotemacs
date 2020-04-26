@@ -132,9 +132,9 @@
 (setq package-selected-packages
       '(
         buffer-move
-        csv-mode
         company
         concurrent
+        csv-mode
         cython-mode
         emojify
         expand-region
