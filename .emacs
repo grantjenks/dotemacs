@@ -136,6 +136,7 @@
         concurrent
         csv-mode
         cython-mode
+        ein
         emojify
         expand-region
         ivy
@@ -360,6 +361,12 @@
    "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+(setq ein:output-area-inlined-images t)
+(face-spec-set
+ 'ein:cell-input-area
+ '((t nil))
+ 'face-defface-spec)
 
 (autoload 'web-mode "web-mode"
   "Major mode for editing web files" t)
