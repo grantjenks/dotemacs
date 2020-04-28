@@ -80,6 +80,7 @@
 (defalias 'bw 'balance-windows)
 (defalias 'cr 'comment-region)
 (defalias 'ucr 'uncomment-region)
+(defalias 'tail 'auto-revert-tail-mode)
 
 (global-set-key (kbd "C-h a") 'apropos)
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
