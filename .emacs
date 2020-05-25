@@ -183,6 +183,12 @@
 ;; https://github.com/emacs-lsp/dap-mode#python
 ;; https://github.com/emacs-lsp/lsp-ui
 ;; https://github.com/emacs-lsp/lsp-treemacs
+;; https://emacs-lsp.github.io/lsp-mode/page/remote/
+;; (lsp-register-client
+;;  (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
+;;                   :major-modes '(python-mode)
+;;                   :remote? t
+;;                   :server-id 'pyls-remote))
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
