@@ -104,6 +104,7 @@
         backup-directory-alist `(("." . ,backup-dir))
         tramp-auto-save-directory auto-saves-dir)
         tramp-backup-directory-alist `((".*" . ,backup-dir)))
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;; Hide window bars.
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
