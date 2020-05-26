@@ -145,6 +145,7 @@
         flycheck
         ivy
         lsp-mode
+        lsp-ui
         magit
         markdown-mode
         org-bullets
