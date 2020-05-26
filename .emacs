@@ -183,19 +183,19 @@
 
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
-(setq lsp-prefer-flymake :none)
+(setq lsp-prefer-flymake nil)
 (setq lsp-pyls-configuration-sources ["flake8"])
 ;; (add-hook 'python-mode-hook #'lsp-deferred)
 ;; https://github.com/tigersoldier/company-lsp
 ;; https://github.com/emacs-lsp/dap-mode#python
 ;; https://github.com/emacs-lsp/lsp-ui
 ;; https://github.com/emacs-lsp/lsp-treemacs
-;; https://emacs-lsp.github.io/lsp-mode/page/remote/
-;; (lsp-register-client
-;;  (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
-;;                   :major-modes '(python-mode)
-;;                   :remote? t
-;;                   :server-id 'pyls-remote))
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
+                  :major-modes '(python-mode)
+                  :remote? t
+                  :server-id 'pyls-remote))
+
 (setq flycheck-python-flake8-executable "flake8")
 (setq flycheck-python-pylint-executable "pylint")
 (setq flycheck-python-mypy-executable "mypy")
