@@ -140,6 +140,7 @@
         cython-mode
         ein
         emojify
+        exec-path-from-shell
         expand-region
         ivy
         lsp-mode
@@ -164,6 +165,9 @@
     (unless (package-installed-p package)
       (package-install package))))
 (install-packages)
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 ;; Don't change the font for some headings and titles
 (setq solarized-use-variable-pitch nil)
