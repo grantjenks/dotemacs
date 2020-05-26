@@ -1,0 +1,27 @@
+# Screen RC
+# Symlinks:
+# $HOME/.screenrc
+
+startup_message off
+
+# Behave as a login shell.
+shell -$SHELL
+
+# Change the command and meta characters from C-a to C-z.
+escape ^za
+
+# Keep many lines of scrollback.
+defscrollback 9999
+
+# Use bright colors for bold text.
+attrcolor b ".I"
+
+# Select utf-8 as default character encoding.
+defutf8 on
+
+# Control the display of the window captions.
+caption always
+caption string "screen %S %t"
+
+# Enable mouse scrolling and scroll bar history scrolling.
+termcapinfo xterm* ti@:te@

@@ -1,0 +1,21 @@
+# Jupyter Lab Service
+# Symlinks:
+# /etc/systemd/system/jupyter-lab.service
+# /etc/systemd/system/multi-user.target.wants/jupyter-lab.service
+
+[Unit]
+Description=Jupyter Lab Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/gjenks
+ExecStart=/usr/bin/env /home/gjenks/env/bin/python -m jupyter lab --ip 0.0.0.0 --port 15050
+User=gjenks
+Restart=always
+RestartSec=3
+StartLimitBurst=20
+StartLimitInterval=90
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Shortcut to ssh to screen
+# Symlinks:
+# $HOME/bin/sshs
+
+ssh -t $1 screen -RR -S $2

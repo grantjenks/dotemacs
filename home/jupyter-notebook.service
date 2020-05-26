@@ -1,0 +1,21 @@
+# Jupyter Notebook Service
+# Symlinks:
+# /etc/systemd/system/jupyter-notebook.service
+# /etc/systemd/system/multi-user.target.wants/jupyter-notebook.service
+
+[Unit]
+Description=Jupyter Notebook Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/gjenks
+ExecStart=/usr/bin/env /home/gjenks/.local/pipx/venvs/ipython/bin/python -m jupyter notebook --ip 0.0.0.0 --port 15555
+User=gjenks
+Restart=always
+RestartSec=3
+StartLimitBurst=20
+StartLimitInterval=90
+
+[Install]
+WantedBy=default.target

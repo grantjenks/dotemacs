@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> 
 <plist version="1.0">
+  <!--
+      Service for Emacs Server
+      Symlinks:
+      $HOME/Library/LaunchAgents/gnu.emacs.daemon.plist
+      $ launchctl load $HOME/Library/LaunchAgents/gnu.emacs.daemon.plist
+      $ launchctl start gnu.emacs.daemon
+  -->
   <dict> 
     <key>Label</key>
     <string>gnu.emacs.daemon</string>

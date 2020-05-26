@@ -1,0 +1,6 @@
+#!/bin/sh
+# Shortcut for emacsclient
+# Symlinks:
+# $HOME/bin/e
+
+/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n -c "$@"
