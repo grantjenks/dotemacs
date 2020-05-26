@@ -142,6 +142,7 @@
         emojify
         exec-path-from-shell
         expand-region
+        flycheck
         ivy
         lsp-mode
         magit
@@ -194,6 +195,9 @@
 ;;                   :major-modes '(python-mode)
 ;;                   :remote? t
 ;;                   :server-id 'pyls-remote))
+(setq flycheck-python-flake8-executable "flake8")
+(setq flycheck-python-pylint-executable "pylint")
+(setq flycheck-python-mypy-executable "mypy")
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
