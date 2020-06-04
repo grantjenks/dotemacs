@@ -143,6 +143,7 @@
         exec-path-from-shell
         expand-region
         flycheck
+        groovy-mode
         ivy
         lsp-mode
         lsp-ui
