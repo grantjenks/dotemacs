@@ -408,7 +408,25 @@
   (interactive "sTesting: \nsBugs: ")
   (compile
    (format "/bin/bash -ic \"git review create --no-prompt --owners --open --testing-done \\\"%s\\\" --bugs \\\"%s\\\"\"" testing bugs)))
-(global-set-key (kbd "C-c l r c") 'linkedin/git-review-create)
+(global-set-key (kbd "C-c l c") 'linkedin/git-review-create)
+
+(defun linkedin/git-review-update ()
+  (interactive)
+  (compile
+   (format "/bin/bash -ic \"git review update\"")))
+(global-set-key (kbd "C-c l u") 'linkedin/git-review-update)
+
+(defun linkedin/git-review-dcommit ()
+  (interactive)
+  (compile
+   (format "/bin/bash -ic \"git review dcommit\"")))
+(global-set-key (kbd "C-c l d") 'linkedin/git-review-dcommit)
+
+(defun linkedin/git-push ()
+  (interactive)
+  (compile
+   (format "/bin/bash -ic \"git push origin HEAD:master\"")))
+(global-set-key (kbd "C-c l p") 'linkedin/git-push)
 
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
