@@ -138,6 +138,7 @@
         concurrent
         csv-mode
         cython-mode
+        dired-subtree
         ein
         emojify
         exec-path-from-shell
@@ -181,6 +182,14 @@
 (setq solarized-height-plus-3 1.0)
 (setq solarized-height-plus-4 1.0)
 (load-theme 'solarized-light t)
+
+(require 'dired)
+(require 'dired-subtree)
+(setq dired-listing-switches "-alh")
+(setq dired-subtree-use-backgrounds nil)
+(define-key dired-mode-map (kbd "^") 'dired-up-directory)
+(define-key dired-mode-map (kbd "i") 'dired-subtree-insert)
+(define-key dired-mode-map (kbd ";") 'dired-subtree-remove)
 
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
