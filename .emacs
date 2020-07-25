@@ -61,6 +61,7 @@
 (setq-default truncate-lines t)
 (setq-default indent-tabs-mode nil)
 (setq-default fill-column 79)
+;; (setq-default tab-width 4)
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
 
@@ -183,6 +184,7 @@
 (setq solarized-height-plus-4 1.0)
 (load-theme 'solarized-light t)
 
+;; Configure dired
 (require 'dired)
 (require 'dired-subtree)
 (setq dired-listing-switches "-alh")
@@ -191,24 +193,25 @@
 (define-key dired-mode-map (kbd "i") 'dired-subtree-insert)
 (define-key dired-mode-map (kbd ";") 'dired-subtree-remove)
 
+;; Configure flycheck
+(require 'flycheck)
+;; Use "pipx" to install flake8, pylint, and mypy.
+(setq flycheck-python-flake8-executable "flake8")
+(setq flycheck-python-pylint-executable "pylint")
+(setq flycheck-python-mypy-executable "mypy")
+
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
 (setq lsp-pyls-configuration-sources ["flake8"])
-;; (add-hook 'python-mode-hook #'lsp-deferred)
-;; https://github.com/tigersoldier/company-lsp
+;; company-capf
 ;; https://github.com/emacs-lsp/dap-mode#python
-;; https://github.com/emacs-lsp/lsp-ui
 ;; https://github.com/emacs-lsp/lsp-treemacs
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
                   :major-modes '(python-mode)
                   :remote? t
                   :server-id 'pyls-remote))
-
-(setq flycheck-python-flake8-executable "flake8")
-(setq flycheck-python-pylint-executable "pylint")
-(setq flycheck-python-mypy-executable "mypy")
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
@@ -239,8 +242,9 @@
      (add-to-list 'grep-find-ignored-directories "env34")
      (add-to-list 'grep-find-ignored-directories "env35")
      (add-to-list 'grep-find-ignored-directories "env36")
-     (add-to-list 'grep-find-ignored-directories "env36alt")
      (add-to-list 'grep-find-ignored-directories "env37")
+     (add-to-list 'grep-find-ignored-directories "env38")
+     (add-to-list 'grep-find-ignored-directories "env39")
      (add-to-list 'grep-find-ignored-directories "venv")
      (add-to-list 'grep-find-ignored-directories "env")))
 
@@ -266,6 +270,11 @@
       '(lambda ()
          (message "Changing to project: %s" default-directory)
          (projectile-dired)))
+(setq projectile-project-root-files-functions
+      '(projectile-root-local
+        projectile-root-top-down
+        projectile-root-top-down-recurring
+        projectile-root-bottom-up))
 (projectile-mode t)
 
 (defadvice kill-ring-save (before slick-copy activate compile)
