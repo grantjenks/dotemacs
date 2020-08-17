@@ -204,9 +204,6 @@
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
 (setq lsp-pyls-configuration-sources ["flake8"])
-;; company-capf
-;; https://github.com/emacs-lsp/dap-mode#python
-;; https://github.com/emacs-lsp/lsp-treemacs
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
                   :major-modes '(python-mode)
@@ -319,13 +316,14 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
 
+(require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (setq company-idle-delay 0.2)
 (setq company-dabbrev-code-modes t)
 (setq company-dabbrev-code-everywhere t)
 (setq company-backends
       '(company-css
-        (company-dabbrev-code company-keywords)
+        (company-capf company-dabbrev-code company-keywords)
         company-files
         company-dabbrev))
 
