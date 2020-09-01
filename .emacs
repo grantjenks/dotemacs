@@ -155,6 +155,7 @@
         php-mode
         popup
         projectile
+        python-black
         pyvenv
         solarized-theme
         swiper
