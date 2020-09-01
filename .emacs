@@ -157,6 +157,7 @@
         projectile
         python-black
         pyvenv
+        scala-mode
         solarized-theme
         swiper
         web-mode
