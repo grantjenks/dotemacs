@@ -146,6 +146,7 @@
         expand-region
         flycheck
         groovy-mode
+        iedit
         ivy
         lsp-mode
         lsp-ui
@@ -211,6 +212,8 @@
                   :major-modes '(python-mode)
                   :remote? t
                   :server-id 'pyls-remote))
+
+(require 'iedit)
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
