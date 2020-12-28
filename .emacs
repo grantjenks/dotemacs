@@ -87,6 +87,7 @@
 (global-set-key (kbd "C-M-g") 'find-file-at-point)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x n r") 'narrow-to-region)
 
 ;; Configure backups.
 (require 'tramp)
@@ -152,6 +153,7 @@
         lsp-ui
         magit
         markdown-mode
+        multiple-cursors
         org-bullets
         php-mode
         popup
@@ -263,6 +265,12 @@
 
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+(require 'multiple-cursors)
+(global-unset-key "\C-xm")
+(global-set-key (kbd "C-x m a") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-x m i") 'mc/mark-more-like-this-extended)
+(global-set-key (kbd "C-x m l") 'mc/edit-lines)
 
 (require 'projectile)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
