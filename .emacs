@@ -242,6 +242,7 @@
      (add-to-list 'grep-find-ignored-files ".coverage")
      (add-to-list 'grep-find-ignored-directories ".tox")
      (add-to-list 'grep-find-ignored-directories ".mypy_cache")
+     (add-to-list 'grep-find-ignored-directories ".pytest_cache")
      (add-to-list 'grep-find-ignored-directories "htmlcov")
      (add-to-list 'grep-find-ignored-directories "env27")
      (add-to-list 'grep-find-ignored-directories "env34")
