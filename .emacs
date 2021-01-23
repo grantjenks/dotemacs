@@ -459,6 +459,12 @@
    (format "/bin/bash -ic \"git push origin HEAD:master\"")))
 (global-set-key (kbd "C-c l p") 'linkedin/git-push)
 
+(defun blue ()
+  (interactive)
+  (compile
+   (format "/bin/bash -ic \"blue %s\"" (buffer-file-name)))
+  (revert-buffer (buffer-file-name)))
+
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
 (define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
