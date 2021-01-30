@@ -9,6 +9,8 @@
 ;;
 ;; ## Reminders
 ;;
+;; /ssh:magnesium:/srv/www for remote access
+;; /ssh:magnesium|sudo:magnesium:/etc for sudo access
 ;; C-SPC C-SPC set mark and disable region
 ;; C-u C-SPC jump to the mark
 ;; M-a / M-b forward / back sentence
