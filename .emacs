@@ -148,6 +148,7 @@
         exec-path-from-shell
         expand-region
         flycheck
+        ; forge
         groovy-mode
         iedit
         ivy
@@ -218,6 +219,9 @@
                   :server-id 'pyls-remote))
 
 (require 'iedit)
+
+; (setq auth-sources '("~/.authinfo"))
+; (require 'forge)
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
