@@ -471,6 +471,17 @@
    (format "/bin/bash -ic \"blue %s\"" (buffer-file-name)))
   (revert-buffer (buffer-file-name)))
 
+;; $ brew install w3m
+;; M-x ddg Search: bill gates Enter
+;; Supports Duck Duck Go's "bang" syntax. For example:
+;; !dict duck typing
+(defun ddg (search-query)
+  (interactive
+   (list
+    (read-from-minibuffer "Search: ")))
+  (shell-command
+   (format "/bin/bash -ic \"w3m 'https://duckduckgo.com/lite?kd=-1&q=%s'\"" search-query)))
+
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
 
 (define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
