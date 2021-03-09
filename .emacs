@@ -479,7 +479,9 @@
 ;; $ brew install w3m
 ;; M-x ddg Search: bill gates Enter
 ;; Supports Duck Duck Go's "bang" syntax. For example:
-;; !dict duck typing
+;; !dict duck typing    <-- Dictionary lookup
+;; !pep 8               <-- Python PEPs
+;; !ducky python numpy  <-- I'm feeling lucky
 (defun ddg (search-query)
   (interactive
    (list
