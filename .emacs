@@ -148,7 +148,7 @@
         exec-path-from-shell
         expand-region
         flycheck
-        ; forge
+        forge
         groovy-mode
         iedit
         ivy
@@ -218,10 +218,15 @@
                   :remote? t
                   :server-id 'pyls-remote))
 
+; Configure iedit
 (require 'iedit)
 
-; (setq auth-sources '("~/.authinfo"))
-; (require 'forge)
+; Configure magit's forge
+(setq auth-sources '("~/.authinfo"))
+(require 'magit)
+(require 'forge)
+(push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
+      forge-alist)
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
