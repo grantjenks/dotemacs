@@ -282,6 +282,7 @@
 (require 'multiple-cursors)
 (global-unset-key "\C-xm")
 (global-set-key (kbd "C-x m a") 'mc/mark-all-like-this)
+; ^-- requires transient mark. Use C-space C-space to deactivate after C-x m a.
 (global-set-key (kbd "C-x m i") 'mc/mark-more-like-this-extended)
 (global-set-key (kbd "C-x m l") 'mc/edit-lines)
 
