@@ -126,7 +126,11 @@
 (setq scroll-conservatively 10000)
 (setq scroll-preserve-screen-position t)
 
+(custom-set-variables
+ '(gnutls-algorithm-priority "normal:-vers-tls1.3"))
+
 (require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 ;; Install selected packages.
