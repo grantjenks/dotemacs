@@ -157,6 +157,7 @@
         markdown-mode
         multiple-cursors
         org-bullets
+        org-jira
         php-mode
         popup
         projectile
@@ -369,6 +370,9 @@
  `(org-level-6 ((t (:weight bold :foreground "#268bd2"))))
  `(org-level-7 ((t (:weight bold :foreground "#268bd2"))))
  `(org-level-8 ((t (:weight bold :foreground "#268bd2")))))
+
+(require 'org-jira)
+(setq jiralib-url "https://jira01.corp.linkedin.com:8443")
 
 (require 'ido)
 (ido-mode t)
