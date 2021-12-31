@@ -84,7 +84,8 @@
 (recentf-mode 1)
 (save-place-mode 1)
 (show-paren-mode 1)
-(global-display-fill-column-indicator-mode)
+(global-display-fill-column-indicator-mode 1)
+(global-so-long-mode 1)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'qr 'query-replace)
