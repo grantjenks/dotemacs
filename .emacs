@@ -130,7 +130,13 @@
  '(gnutls-algorithm-priority "normal:-vers-tls1.3"))
 
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(when (and (equal emacs-version "27.2")
+           (eql system-type 'darwin))
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t))
 (package-initialize)
 
 ;; Install selected packages.
