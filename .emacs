@@ -158,6 +158,7 @@
         csv-mode
         cython-mode
         dired-subtree
+        docker
         ein
         emojify
         exec-path-from-shell
@@ -403,6 +404,9 @@
 (global-set-key (kbd "C-c r") 'ivy-resume)
 (setq ivy-use-selectable-prompt t)
 (setq ivy-use-virtual-buffers t)
+
+(require 'docker)
+(global-set-key (kbd "C-x d") 'docker)
 
 (setq c-basic-offset 2)
 (setq c-default-style '((java-mode . "java")
