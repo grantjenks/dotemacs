@@ -157,6 +157,7 @@
         concurrent
         csv-mode
         cython-mode
+        dired-narrow
         dired-subtree
         docker
         ein
@@ -211,12 +212,14 @@
 
 ;; Configure dired
 (require 'dired)
+(require 'dired-narrow)
 (require 'dired-subtree)
 (setq dired-listing-switches "-alh")
 (setq dired-subtree-use-backgrounds nil)
 (define-key dired-mode-map (kbd "b") 'dired-up-directory)
 (define-key dired-mode-map (kbd "i") 'dired-subtree-insert)
 (define-key dired-mode-map (kbd "I") 'dired-subtree-remove)
+(define-key dired-mode-map (kbd "/") 'dired-narrow)
 
 ;; Configure flycheck
 (require 'flycheck)
