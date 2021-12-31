@@ -48,9 +48,19 @@
 ;; (cond ((display-graphic-p) (load-theme 'solarized t))
 ;;       (t (load-theme 'whiteboard)))
 
-(let ((local-bin-dir (expand-file-name "~/.local/bin")))
-  (setenv "PATH" (concat (getenv "PATH") (concat ":" local-bin-dir)))
-  (setq exec-path (append exec-path (list local-bin-dir))))
+(mapc
+ (lambda (path)
+   (let ((bin-dir (expand-file-name path)))
+     (when (file-directory-p bin-dir)
+       (setenv "PATH" (concat (getenv "PATH") ":" bin-dir))
+       (setq exec-path (append exec-path (list bin-dir))))))
+ (list
+  "/opt/local/bin"
+  "/opt/local/sbin"
+  "~/bin"
+  "/usr/local/bin"
+  "~/.local/bin"
+  ))
 
 (setq frame-title-format "%b")
 (setq inhibit-startup-screen t)
