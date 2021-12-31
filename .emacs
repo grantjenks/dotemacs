@@ -209,6 +209,11 @@
 (setq solarized-height-plus-4 1.0)
 (load-theme 'solarized-light t)
 
+;; Font setup
+; (package-install 'fira-code-mode)
+; (fira-code-mode-install-fonts)
+; (global-fira-code-mode)
+
 ;; Configure hide-show mode
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (setq hs-isearch-open t)
