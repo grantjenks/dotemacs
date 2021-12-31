@@ -208,6 +208,10 @@
 (setq solarized-height-plus-4 1.0)
 (load-theme 'solarized-light t)
 
+;; Configure hide-show mode
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+(global-set-key (kbd "C-'") 'hs-toggle-hiding)
+
 ;; Configure dired
 (require 'dired)
 (require 'dired-narrow)
