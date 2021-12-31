@@ -83,6 +83,7 @@
 (recentf-mode 1)
 (save-place-mode 1)
 (show-paren-mode 1)
+(global-display-fill-column-indicator-mode)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'qr 'query-replace)
@@ -135,9 +136,6 @@
 (setq scroll-margin 5)
 (setq scroll-conservatively 10000)
 (setq scroll-preserve-screen-position t)
-
-(custom-set-variables
- '(gnutls-algorithm-priority "normal:-vers-tls1.3"))
 
 (require 'package)
 (when (and (equal emacs-version "27.2")
