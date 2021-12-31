@@ -474,6 +474,11 @@
    (format "/bin/bash -ic \"git push origin HEAD:master\"")))
 (global-set-key (kbd "C-c l p") 'linkedin/git-push)
 
+(defun git-push-dokku ()
+  (interactive)
+  (compile
+   (format "/bin/bash -ic \"git push dokku main:main\"")))
+
 (defun blue ()
   (interactive)
   (compile
