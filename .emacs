@@ -73,9 +73,10 @@
 (setq-default truncate-lines t)
 (setq-default indent-tabs-mode nil)
 (setq-default fill-column 79)
-;; (setq-default tab-width 4)
+(setq-default sentence-end-double-space nil)
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
+(setq create-lockfiles nil)
 
 (blink-cursor-mode -1)
 (column-number-mode 1)
