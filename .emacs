@@ -211,6 +211,7 @@
 
 ;; Configure hide-show mode
 (add-hook 'prog-mode-hook #'hs-minor-mode)
+(setq hs-isearch-open t)
 (global-set-key (kbd "C-'") 'hs-toggle-hiding)
 
 ;; Configure dired
