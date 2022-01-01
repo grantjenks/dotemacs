@@ -74,6 +74,7 @@
 (setq-default indent-tabs-mode nil)
 (setq-default fill-column 79)
 (setq-default sentence-end-double-space nil)
+(setq-default show-trailing-whitespace t)
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
 (setq create-lockfiles nil)
