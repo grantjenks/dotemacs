@@ -177,6 +177,7 @@
         scala-mode
         solarized-theme
         swiper
+        undo-tree
         web-mode
         yaml-mode
         ))
@@ -207,6 +208,9 @@
 ; (package-install 'fira-code-mode)
 ; (fira-code-mode-install-fonts)
 ; (global-fira-code-mode)
+
+;; Configure undo tree mode -> C-x u
+(global-undo-tree-mode t)
 
 ;; Configure hide-show mode
 (add-hook 'prog-mode-hook #'hs-minor-mode)
