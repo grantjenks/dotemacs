@@ -410,6 +410,7 @@
 (setq ido-use-virtual-buffers t)
 (setq ido-enable-flex-matching t)
 (setq enable-recursive-minibuffers t)
+(ido-everywhere)
 
 (require 'ivy)
 ;; (ivy-mode 1)
