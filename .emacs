@@ -538,6 +538,7 @@
   (shell-command
    (format "/bin/bash -ic \"w3m 'https://duckduckgo.com/lite?kd=-1&q=%s'\"" search-query)))
 
+;; M-x zone
 (setq zone-programs [zone-pgm-drip])
 
 (defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
