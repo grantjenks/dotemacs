@@ -154,6 +154,7 @@
 ;; Install selected packages.
 (setq package-selected-packages
       '(
+        ace-window
         buffer-move
         company
         concurrent
@@ -541,28 +542,11 @@
 ;; M-x zone
 (setq zone-programs [zone-pgm-drip])
 
-(defvar gmj-keys-minor-mode-map (make-keymap) "gmj-keys-minor-mode keymap")
+;; Configure ace-window
+(require 'ace-window)
+(global-set-key (kbd "M-o") 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+(setq aw-background nil)
+(setq aw-dispatch-always t)
 
-(define-key gmj-keys-minor-mode-map (kbd "C-M-6") 'windmove-left)
-(define-key gmj-keys-minor-mode-map (kbd "C-M-9") 'windmove-right)
-(define-key gmj-keys-minor-mode-map (kbd "C-M-7") 'windmove-up)
-(define-key gmj-keys-minor-mode-map (kbd "C-M-8") 'windmove-down)
-
-(define-minor-mode gmj-keys-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  t " gmj-keys" 'gmj-keys-minor-mode-map)
-
-(gmj-keys-minor-mode 1)
-
-(add-hook 'minibuffer-setup-hook
-          (lambda ()
-            (gmj-keys-minor-mode 0)))
-
-;; In order for the above to work in more cases (like flyspell):
-(defadvice load (after give-gmj-keybindings-priority)
-  "Try to ensure that my keybindings always have priority."
-  (if (not (eq (car (car minor-mode-map-alist)) 'gmj-keys-minor-mode))
-      (let ((gmjkeys (assq 'gmj-keys-minor-mode minor-mode-map-alist)))
-        (assq-delete-all 'gmj-keys-minor-mode minor-mode-map-alist)
-        (add-to-list 'minor-mode-map-alist gmjkeys))))
 (ad-activate 'load)
