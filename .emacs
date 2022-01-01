@@ -168,6 +168,7 @@
         expand-region
         flycheck
         forge
+        git-gutter
         groovy-mode
         iedit
         ivy
@@ -221,6 +222,9 @@
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (setq hs-isearch-open t)
 (global-set-key (kbd "C-'") 'hs-toggle-hiding)
+
+;; Configure git gutter mode
+(add-hook 'prog-mode-hook #'git-gutter-mode)
 
 ;; Configure dired
 (require 'dired)
