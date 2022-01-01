@@ -104,6 +104,7 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x n r") 'narrow-to-region)
+(global-set-key (kbd "C-x w") 'delete-trailing-whitespace)
 
 ;; Configure backups.
 (require 'tramp)
