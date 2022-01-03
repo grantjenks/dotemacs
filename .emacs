@@ -1,6 +1,6 @@
 ;; # Emacs Config File: .emacs
 ;;
-;; Copyright 2015-2020 Grant Jenks
+;; Copyright 2015-2022 Grant Jenks
 ;;
 ;; ## Setup
 ;;
