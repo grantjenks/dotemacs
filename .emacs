@@ -294,7 +294,7 @@
     (setq grep-find-template original-grep-find-template)))
 
 (require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-i") 'er/expand-region)
 
 (require 'multiple-cursors)
 (global-unset-key "\C-xm")
