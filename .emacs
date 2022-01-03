@@ -316,6 +316,8 @@
 (global-unset-key "\C-xm")
 (global-set-key (kbd "C-x m a") 'mc/mark-all-like-this)
 ; ^-- requires transient mark. Use C-space C-space to deactivate after C-x m a.
+(global-set-key (kbd "C-x m s") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-x m r") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-x m i") 'mc/mark-more-like-this-extended)
 (global-set-key (kbd "C-x m l") 'mc/edit-lines)
 
