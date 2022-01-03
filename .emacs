@@ -147,7 +147,6 @@
 (setq package-selected-packages
       '(
         ace-window
-        buffer-move
         company
         concurrent
         csv-mode
@@ -265,13 +264,6 @@
 ;  (cd dir)
 ;  (compilation-start (format "findstr.exe %s" cmd) 'grep-mode)
 ;  (cd old-default-directory))
-
-;; Move buffers around.
-(require 'buffer-move)
-(global-set-key (kbd "C-M-^") 'buf-move-left)
-(global-set-key (kbd "C-M-(") 'buf-move-right)
-(global-set-key (kbd "C-M-&") 'buf-move-up)
-(global-set-key (kbd "C-M-*") 'buf-move-down)
 
 (eval-after-load "grep"
   '(progn
