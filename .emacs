@@ -13,9 +13,8 @@
 ;; /ssh:magnesium|sudo:magnesium:/etc for sudo access
 ;; C-SPC C-SPC set mark and disable region
 ;; C-u C-SPC jump to the mark
-;; M-a / M-b forward / back sentence
+;; M-a / M-e forward / back sentence
 ;; C-M-a C-M-e begging/end of defun
-;; M-r cycle positions in window (middle-top-bottom)
 ;; C-x r (m|b|l) registers/bookmarks
 ;; C-x r s [name] save region to register
 ;; C-x r i [name] insert region from register
@@ -26,13 +25,6 @@
 ;; 2. (pakcage-list-packages)
 ;; 3. U  ; Select packages for upgrades.
 ;; 4. x  ; Upgrade packages.
-;;
-;; ### Shell commands
-;;
-;; M-! execute shell command
-;; M-& execute shell command async
-;; M-| send region to shell command
-;; With C-u, output command to buffer
 ;;
 ;; ### Elisp Commands
 ;;
