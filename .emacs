@@ -546,5 +546,3 @@
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (setq aw-background nil)
 (setq aw-dispatch-always t)
-
-(ad-activate 'load)
