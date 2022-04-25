@@ -152,7 +152,7 @@
         cython-mode
         dired-narrow
         dired-subtree
-        docker
+        ; docker
         ein
         emojify
         exec-path-from-shell
@@ -411,8 +411,8 @@
 (setq ivy-use-selectable-prompt t)
 (setq ivy-use-virtual-buffers t)
 
-(require 'docker)
-(global-set-key (kbd "C-x d") 'docker)
+; (require 'docker)
+; (global-set-key (kbd "C-x d") 'docker)
 
 (setq c-basic-offset 2)
 (setq c-default-style '((java-mode . "java")
