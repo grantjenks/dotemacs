@@ -153,6 +153,7 @@
         dired-narrow
         dired-subtree
         ; docker
+        dumb-jump
         ein
         emojify
         exec-path-from-shell
@@ -254,6 +255,9 @@
 (require 'forge)
 (push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
       forge-alist)
+
+; Configure dumb-jump
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 
 ;; Old findstr.exe command.
 ;(defvar findstr-args-history nil)
