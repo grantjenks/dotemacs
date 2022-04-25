@@ -22,7 +22,7 @@
 ;; ### Upgrade Packages
 ;;
 ;; 1. (package-refresh-contents)
-;; 2. (pakcage-list-packages)
+;; 2. (package-list-packages)
 ;; 3. U  ; Select packages for upgrades.
 ;; 4. x  ; Upgrade packages.
 ;;
