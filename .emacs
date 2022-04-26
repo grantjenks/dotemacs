@@ -212,6 +212,7 @@
 
 ;; Configure undo tree mode -> C-x u
 (global-undo-tree-mode t)
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-tree")))
 
 ;; Configure hide-show mode
 (add-hook 'prog-mode-hook #'hs-minor-mode)
