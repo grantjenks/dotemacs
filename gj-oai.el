@@ -8,7 +8,7 @@
           (let ((prefix (read-string "Enter prefix: "))
                 (suffix (read-string "Enter suffix: "))
                 (region-content (buffer-substring-no-properties (region-beginning) (region-end))))
-            (setq query (format "%s\n```\n%s\n```\n%s" prefix region-content suffix))
+            (setq query (concat prefix "\n```\n" region-content "\n```\n" suffix))
             (deactivate-mark)))
       (setq query (read-string "Enter query: ")))
     (let ((temp-file (make-temp-file "chat-completion-")))
