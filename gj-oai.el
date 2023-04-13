@@ -1,26 +1,21 @@
-;; TODO
-;; - Region behavior does not work!
-
-(defun chat-completion (prefix suffix query)
+(defun gj-chat-completion ()
   "Send a query to a Chat Completion process and display the output in a new buffer."
-  (interactive
-   (if (region-active-p)
-       (list
-        (read-string "Prefix: ")
-        (read-string "Suffix: ")
-        (buffer-substring-no-properties (region-beginning) (region-end)))
-     (list
-      nil
-      nil
-      (read-string "Query: "))))
-  (let ((temp-file (make-temp-file "chat-completion-")))
-    (with-temp-file temp-file
-      (insert (if (region-active-p)
-                  (concat prefix "\n```\n" query "\n```\n" suffix)
-                query)))
-    (compile (format "/bin/bash -ic \"cat '%s' | /Users/grantjenks/repos/dotemacs/oai && rm '%s'\""
-                     (shell-quote-argument temp-file)
-                     (shell-quote-argument temp-file))
-             t)
-    (setq-local compilation-read-command nil)
-    (pop-to-buffer compilation-last-buffer)))
+  (interactive)
+  (let ((query ""))
+    (if (region-active-p)
+        (progn
+          (let ((prefix (read-string "Enter prefix: "))
+                (suffix (read-string "Enter suffix: "))
+                (region-content (buffer-substring-no-properties (region-beginning) (region-end))))
+            (setq query (format "%s\n\"\"\"\n%s\n\"\"\"\n%s" prefix region-content suffix))
+            (deactivate-mark)))
+      (setq query (read-string "Enter query: ")))
+    (let ((temp-file (make-temp-file "chat-completion-")))
+      (with-temp-file temp-file
+        (insert query))
+      (compile (format "/bin/bash -ic \"cat '%s' | /Users/gjenks/repos/dotemacs/oai && rm '%s'\""
+                       (shell-quote-argument temp-file)
+                       (shell-quote-argument temp-file))
+               t)
+      (setq-local compilation-read-command nil)
+      (pop-to-buffer compilation-last-buffer))))
