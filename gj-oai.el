@@ -21,3 +21,5 @@
                t)
       (setq-local compilation-read-command nil)
       (pop-to-buffer compilation-last-buffer))))
+
+(global-set-key (kbd "C-c g") 'gj-chat-completion)
