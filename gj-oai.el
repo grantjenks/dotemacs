@@ -1,3 +1,6 @@
+;; TODO
+;; - Region behavior does not work!
+
 (defun chat-completion (prefix suffix query)
   "Send a query to a Chat Completion process and display the output in a new buffer."
   (interactive
