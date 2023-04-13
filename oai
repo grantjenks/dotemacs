@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+"""Call OpenAI chat completions endpoint and stream results.
+
+$ cat <<EOD | ./oai
+> Write a short poem with the following characteristics:
+> 1. It's about computers
+> 2. It's only 5 lines
+> 3. It rhymes
+> 
+> In circuits and wires, our thoughts intertwine,
+A digital dance, a binary shrine.
+Through screens we connect, in silence we speak,
+In virtual realms, our dreams we seek.
+Oh wondrous machine, our lives you refine.
+"""
+
+import json
+import os
+import sys
+import urllib.request
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    env_path = os.path.expanduser("~/.env")
+    if os.path.isfile(env_path):
+        with open(env_path) as f:
+            for line in f:
+                if 'OPENAI_API_KEY=' in line:
+                    OPENAI_API_KEY = line.split("=")[1].strip()
+                    break
+
+    if not OPENAI_API_KEY:
+        print("OPENAI_API_KEY environment variable not set")
+        sys.exit(1)
+
+url = 'https://api.openai.com/v1/chat/completions'
+prompt = sys.stdin.read().rstrip('\n')
+print(prompt)
+payload = {
+    'model': 'gpt-4',  # gpt-3.5-turbo
+    'messages': [
+        {'role': 'user', 'content': prompt}
+    ],
+    'temperature': 0,
+    'stream': True,
+}
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': f'Bearer {OPENAI_API_KEY}',
+}
+req = urllib.request.Request(
+    url,
+    data=json.dumps(payload).encode('utf-8'),
+    headers=headers,
+)
+
+with urllib.request.urlopen(req) as res:
+    chunks = []
+    for chunk in res:
+        chunks.append(chunk)
+        if chunk.endswith(b'\n'):
+            line = b''.join(chunks).decode('utf-8')
+            text = line.strip()[6:]  # First six characters are "data: "
+            try:
+                data = json.loads(text)
+                content = data['choices'][0]['delta']['content']
+                print(content, end='')
+            except (KeyError, json.JSONDecodeError):
+                pass
+            chunks.clear()
+
+print()
