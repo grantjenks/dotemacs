@@ -10,13 +10,13 @@
       nil
       nil
       (read-string "Query: "))))
-  (compile (format "/bin/bash -ic \"echo '%s' | %s %s %s\""
-                   (if (region-active-p)
-                       (concat prefix "\n```\n" query "\n```\n" suffix)
-                     query)
-                   "/Users/grantjenks/repos/dotemacs/oai"
-                   "-"
-                   "-")
-           t)
-  (setq-local compilation-read-command nil)
-  (pop-to-buffer compilation-last-buffer))
+  (let ((temp-file (make-temp-file "chat-completion-")))
+    (with-temp-file temp-file
+      (insert (if (region-active-p)
+                  (concat prefix "\n```\n" query "\n```\n" suffix)
+                query)))
+    (compile (format "/bin/bash -ic \"cat '%s' | /Users/grantjenks/repos/dotemacs/oai\""
+                     (shell-quote-argument temp-file))
+             t)
+    (setq-local compilation-read-command nil)
+    (pop-to-buffer compilation-last-buffer)))
