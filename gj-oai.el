@@ -15,7 +15,8 @@
       (insert (if (region-active-p)
                   (concat prefix "\n```\n" query "\n```\n" suffix)
                 query)))
-    (compile (format "/bin/bash -ic \"cat '%s' | /Users/grantjenks/repos/dotemacs/oai\""
+    (compile (format "/bin/bash -ic \"cat '%s' | /Users/grantjenks/repos/dotemacs/oai && rm '%s'\""
+                     (shell-quote-argument temp-file)
                      (shell-quote-argument temp-file))
              t)
     (setq-local compilation-read-command nil)
