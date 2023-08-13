@@ -175,6 +175,8 @@
         projectile
         python-black
         pyvenv
+        quelpa
+        quelpa-use-package
         scala-mode
         solarized-theme
         swiper
@@ -539,3 +541,11 @@
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (setq aw-background nil)
 (setq aw-dispatch-always t)
+
+(require 'use-package)
+(require 'quelpa-use-package)
+(use-package copilot
+  :quelpa (copilot :fetcher github
+                   :repo "zerolfx/copilot.el"
+                   :branch "main"
+                   :files ("dist" "*.el")))
