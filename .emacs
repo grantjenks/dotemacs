@@ -160,6 +160,7 @@
         expand-region
         flycheck
         forge
+        go-mode
         groovy-mode
         iedit
         ivy
