@@ -176,6 +176,7 @@
         projectile
         python-black
         pyvenv
+        rust-mode
         quelpa
         quelpa-use-package
         scala-mode
