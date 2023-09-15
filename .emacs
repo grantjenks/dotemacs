@@ -146,6 +146,7 @@
 (setq package-selected-packages
       '(
         ace-window
+        bazel
         company
         concurrent
         csv-mode
