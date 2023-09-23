@@ -175,6 +175,7 @@
         php-mode
         popup
         projectile
+        protobuf-mode
         python-black
         pyvenv
         rust-mode
