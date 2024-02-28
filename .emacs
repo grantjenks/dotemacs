@@ -295,6 +295,7 @@
      (add-to-list 'grep-find-ignored-directories "env39")
      (add-to-list 'grep-find-ignored-directories "env310")
      (add-to-list 'grep-find-ignored-directories "env311")
+     (add-to-list 'grep-find-ignored-directories "env312")
      (add-to-list 'grep-find-ignored-directories "venv")
      (add-to-list 'grep-find-ignored-directories "env")))
 
