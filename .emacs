@@ -253,6 +253,8 @@
                   :major-modes '(python-mode)
                   :remote? t
                   :server-id 'pyls-remote))
+(global-set-key (kbd "C-c l") 'lsp-mode)
+
 
 ; Configure iedit
 (require 'iedit)
