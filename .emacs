@@ -178,6 +178,7 @@
         protobuf-mode
         python-black
         pyvenv
+        rg
         rust-mode
         quelpa
         quelpa-use-package
@@ -555,3 +556,6 @@
                    :repo "zerolfx/copilot.el"
                    :branch "main"
                    :files ("dist" "*.el")))
+
+(require 'rg)
+(rg-enable-default-bindings)
