@@ -42,3 +42,8 @@ then
 fi
 
 export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
+if [ -f "$HOME/repos/openai/personal/grantjenks/.bashrc" ]; then
+    source "$HOME/repos/openai/personal/grantjenks/.bashrc"
+fi
