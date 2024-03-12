@@ -260,8 +260,8 @@
 (setq auth-sources '("~/.authinfo"))
 (require 'magit)
 (require 'forge)
-(push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
-      forge-alist)
+;; (push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
+;;       forge-alist)
 
 ; Configure dumb-jump
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
@@ -408,8 +408,8 @@
  `(org-level-7 ((t (:weight bold :foreground "#268bd2"))))
  `(org-level-8 ((t (:weight bold :foreground "#268bd2")))))
 
-(require 'org-jira)
-(setq jiralib-url "https://jira01.corp.linkedin.com:8443")
+;; (require 'org-jira)
+;; (setq jiralib-url "https://jira01.corp.linkedin.com:8443")
 
 (require 'ido)
 (ido-mode t)
@@ -485,34 +485,34 @@
 
 (add-to-list 'auto-mode-alist '("\\.css_t\\'" . css-mode))
 
-(defun linkedin/mint-build ()
-  (interactive)
-  (compile "/bin/bash -ic \"mint build\""))
-(global-set-key (kbd "<f5>") 'linkedin/mint-build)
+;; (defun linkedin/mint-build ()
+;;   (interactive)
+;;   (compile "/bin/bash -ic \"mint build\""))
+;; (global-set-key (kbd "<f5>") 'linkedin/mint-build)
 
-(defun linkedin/git-review-create (testing bugs)
-  (interactive "sTesting: \nsBugs: ")
-  (compile
-   (format "/bin/bash -ic \"git review create --no-prompt --owners --open --testing-done \\\"%s\\\" --bugs \\\"%s\\\"\"" testing bugs)))
-(global-set-key (kbd "C-c l c") 'linkedin/git-review-create)
+;; (defun linkedin/git-review-create (testing bugs)
+;;   (interactive "sTesting: \nsBugs: ")
+;;   (compile
+;;    (format "/bin/bash -ic \"git review create --no-prompt --owners --open --testing-done \\\"%s\\\" --bugs \\\"%s\\\"\"" testing bugs)))
+;; (global-set-key (kbd "C-c l c") 'linkedin/git-review-create)
 
-(defun linkedin/git-review-update ()
-  (interactive)
-  (compile
-   (format "/bin/bash -ic \"git review update\"")))
-(global-set-key (kbd "C-c l u") 'linkedin/git-review-update)
+;; (defun linkedin/git-review-update ()
+;;   (interactive)
+;;   (compile
+;;    (format "/bin/bash -ic \"git review update\"")))
+;; (global-set-key (kbd "C-c l u") 'linkedin/git-review-update)
 
-(defun linkedin/git-review-dcommit ()
-  (interactive)
-  (compile
-   (format "/bin/bash -ic \"git review dcommit\"")))
-(global-set-key (kbd "C-c l d") 'linkedin/git-review-dcommit)
+;; (defun linkedin/git-review-dcommit ()
+;;   (interactive)
+;;   (compile
+;;    (format "/bin/bash -ic \"git review dcommit\"")))
+;; (global-set-key (kbd "C-c l d") 'linkedin/git-review-dcommit)
 
-(defun linkedin/git-push ()
-  (interactive)
-  (compile
-   (format "/bin/bash -ic \"git push origin HEAD:master\"")))
-(global-set-key (kbd "C-c l p") 'linkedin/git-push)
+;; (defun linkedin/git-push ()
+;;   (interactive)
+;;   (compile
+;;    (format "/bin/bash -ic \"git push origin HEAD:master\"")))
+;; (global-set-key (kbd "C-c l p") 'linkedin/git-push)
 
 (defun git-push-dokku ()
   (interactive)
