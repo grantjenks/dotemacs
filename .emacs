@@ -561,3 +561,15 @@
 
 (require 'rg)
 (rg-enable-default-bindings)
+
+(defun open-github-pr ()
+  "Open a new GitHub pull request in the default browser using the current branch."
+  (interactive)
+  (let* ((current-branch (magit-get-current-branch))
+         (remote-url (magit-get "remote" "origin" "url"))
+         (github-url (if (string-match "github\\.com[:/]\\(.*?\\)\\.git$" remote-url)
+                         (match-string 1 remote-url)
+                       (error "Could not parse GitHub URL")))
+         (pr-url (format "https://github.com/%s/compare/%s?expand=1" github-url current-branch)))
+    (browse-url pr-url)))
+(global-set-key (kbd "C-c m p") 'open-github-pr)
