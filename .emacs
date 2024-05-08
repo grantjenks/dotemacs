@@ -187,6 +187,7 @@
         swiper
         undo-tree
         web-mode
+        which-key
         yaml-mode
         ))
 (defun install-packages ()
@@ -244,6 +245,7 @@
 (setq flycheck-python-pylint-executable "pylint")
 (setq flycheck-python-mypy-executable "mypy")
 
+(setq lsp-keymap-prefix "M-l")
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
@@ -573,3 +575,6 @@
          (pr-url (format "https://github.com/%s/compare/%s?expand=1" github-url current-branch)))
     (browse-url pr-url)))
 (global-set-key (kbd "C-c m p") 'open-github-pr)
+
+(require 'which-key)
+(which-key-mode)
