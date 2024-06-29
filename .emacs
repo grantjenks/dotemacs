@@ -255,7 +255,7 @@
                   :major-modes '(python-mode)
                   :remote? t
                   :server-id 'pyls-remote))
-(global-set-key (kbd "C-c l") 'lsp-mode)
+(global-set-key (kbd "C-c i") 'lsp-mode)
 
 
 ; Configure iedit
@@ -466,6 +466,8 @@
 (add-hook 'compilation-filter-hook
           #'gj/colorize-compilation)
 
+(global-set-key (kbd "C-c t r") 'recompile)
+
 (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
@@ -578,3 +580,22 @@
 
 (require 'which-key)
 (which-key-mode)
+
+(global-set-key (kbd "C-c d p") 'realgud:pdb-remote)
+(global-set-key (kbd "C-c d q") 'realgud:cmd-quit)
+(global-set-key (kbd "C-c d d") 'realgud-short-key-mode)
+
+(defun send-buffer-to-llm ()
+  "Write the buffer to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping."
+  (interactive)
+  (let* ((temp-file (make-temp-file "emacs-llm-"))
+         (output-buffer (generate-new-buffer-name "*LLM Output*"))
+         (command (format "cat %s | llm" temp-file)))
+    (write-region (point-min) (point-max) temp-file)
+    (compilation-start command
+                       'compilation-mode
+                       (lambda (_) output-buffer))
+    (with-current-buffer output-buffer
+      (setq truncate-lines nil))))
+
+(global-set-key (kbd "C-c l b") 'send-buffer-to-llm)
