@@ -466,6 +466,7 @@
 (add-hook 'compilation-filter-hook
           #'gj/colorize-compilation)
 
+(global-set-key (kbd "<f5>") 'recompile)
 (global-set-key (kbd "C-c t r") 'recompile)
 
 (autoload 'markdown-mode "markdown-mode"
@@ -581,6 +582,7 @@
 (require 'which-key)
 (which-key-mode)
 
+(require 'realgud)
 (global-set-key (kbd "C-c d p") 'realgud:pdb-remote)
 (global-set-key (kbd "C-c d q") 'realgud:cmd-quit)
 (global-set-key (kbd "C-c d d") 'realgud-short-key-mode)
@@ -599,3 +601,49 @@
       (setq truncate-lines nil))))
 
 (global-set-key (kbd "C-c l b") 'send-buffer-to-llm)
+
+(defun send-region-to-llm (start end)
+  "Write the region to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping."
+  (interactive "r")
+  (let* ((temp-file (make-temp-file "emacs-llm-"))
+         (output-buffer (generate-new-buffer-name "*LLM Output*"))
+         (command (format "cat %s | llm" temp-file)))
+    (write-region start end temp-file)
+    (compilation-start command
+                       'compilation-mode
+                       (lambda (_) output-buffer))
+    (with-current-buffer output-buffer
+      (setq truncate-lines nil))))
+
+(global-set-key (kbd "C-c l r") 'send-region-to-llm)
+
+(defun send-prompt-to-llm (use-c-flag)
+  "Ask the user for a prompt, then invoke `llm` in a uniquely named compilation buffer with line wrapping.
+If called with a prefix argument, add the `-c` flag to the `llm` command."
+  (interactive "P")  ; P means provide the prefix argument as an argument to the function
+  (let ((prompt (read-string "Prompt: "))
+        (temp-file (make-temp-file "emacs-llm-"))
+        (output-buffer (generate-new-buffer-name "*LLM Output*"))
+        (llm-command "llm"))
+    (with-temp-file temp-file
+      (insert prompt))
+    (when use-c-flag
+      (setq llm-command (concat llm-command " -c")))
+    (let ((command (format "cat %s | %s" temp-file llm-command)))
+      (compilation-start command
+                         'compilation-mode
+                         (lambda (_) output-buffer)))
+    (with-current-buffer output-buffer
+      (setq truncate-lines nil))))
+
+(global-set-key (kbd "C-c l p") 'send-prompt-to-llm)
+
+(defun git-update-branch ()
+  "Merge master and push without verification from the root git directory."
+  (interactive)
+  (let ((default-directory (magit-toplevel)))
+    (when default-directory
+      (let ((output-buffer (generate-new-buffer-name "*Git Merge and Push*")))
+        (compilation-start "git merge master && git push --no-verify"
+                           'compilation-mode
+                           (lambda (_) output-buffer))))))
