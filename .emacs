@@ -656,6 +656,6 @@ If called with a prefix argument, add the `-c` flag to the `llm` command."
   (let ((default-directory (magit-toplevel)))
     (when default-directory
       (let ((output-buffer (generate-new-buffer-name "*Git Merge and Push*")))
-        (compilation-start "git merge master && git push --no-verify"
+        (compilation-start "(git merge master && git push --no-verify) || git status"
                            'compilation-mode
                            (lambda (_) output-buffer))))))
