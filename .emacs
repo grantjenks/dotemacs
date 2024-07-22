@@ -587,12 +587,18 @@
 (global-set-key (kbd "C-c d q") 'realgud:cmd-quit)
 (global-set-key (kbd "C-c d d") 'realgud-short-key-mode)
 
-(defun send-buffer-to-llm ()
-  "Write the buffer to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping."
-  (interactive)
+(defun send-buffer-to-llm (use-prompt)
+  "Write the buffer to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping.
+If called with a prefix argument, ask the user for a prompt and include it in the `llm` command."
+  (interactive "P")  ; "P" for prefix argument
   (let* ((temp-file (make-temp-file "emacs-llm-"))
          (output-buffer (generate-new-buffer-name "*LLM Output*"))
-         (command (format "cat %s | llm" temp-file)))
+         (prompt (if use-prompt
+                     (read-string "Prompt: ")
+                   ""))
+         (command (if use-prompt
+                      (format "cat %s | llm \"%s\"" temp-file (shell-quote-argument prompt))
+                    (format "cat %s | llm" temp-file))))
     (write-region (point-min) (point-max) temp-file)
     (compilation-start command
                        'compilation-mode
@@ -602,12 +608,18 @@
 
 (global-set-key (kbd "C-c l b") 'send-buffer-to-llm)
 
-(defun send-region-to-llm (start end)
-  "Write the region to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping."
-  (interactive "r")
+(defun send-region-to-llm (start end use-prompt)
+  "Write the region to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping.
+If called with a prefix argument, ask the user for a prompt and include it in the `llm` command."
+  (interactive "r\nP")  ; "r" for region, "P" for prefix argument
   (let* ((temp-file (make-temp-file "emacs-llm-"))
          (output-buffer (generate-new-buffer-name "*LLM Output*"))
-         (command (format "cat %s | llm" temp-file)))
+         (prompt (if use-prompt
+                     (read-string "Prompt: ")
+                   ""))
+         (command (if use-prompt
+                      (format "cat %s | llm \"%s\"" temp-file (shell-quote-argument prompt))
+                    (format "cat %s | llm" temp-file))))
     (write-region start end temp-file)
     (compilation-start command
                        'compilation-mode
