@@ -650,6 +650,22 @@ If called with a prefix argument, add the `-c` flag to the `llm` command."
 
 (global-set-key (kbd "C-c l p") 'send-prompt-to-llm)
 
+(defun run-llm-chat (use-c-flag)
+  "Run `llm chat` in comint mode.
+With prefix argument, run `llm chat -c` instead."
+  (interactive "P")
+  (let ((buffer-name "*LLM Chat*")
+        (command "llm chat"))
+    (when use-c-flag
+      (setq command (concat command " -c")))
+    (with-current-buffer (get-buffer-create buffer-name)
+      (setq truncate-lines nil)
+      (comint-mode)
+      (comint-exec buffer-name buffer-name shell-file-name nil (list shell-command-switch command))
+      (pop-to-buffer buffer-name))))
+
+(global-set-key (kbd "C-c l c") 'run-llm-chat)
+
 (defun git-update-branch ()
   "Merge master and push without verification from the root git directory."
   (interactive)
