@@ -672,6 +672,6 @@ With prefix argument, run `llm chat -c` instead."
   (let ((default-directory (magit-toplevel)))
     (when default-directory
       (let ((output-buffer (generate-new-buffer-name "*Git Merge and Push*")))
-        (compilation-start "(git merge master && git push --no-verify) || git status"
+        (compilation-start "(git merge master -m \"Merge branch 'master'\" && git push --no-verify) || git status"
                            'compilation-mode
                            (lambda (_) output-buffer))))))
