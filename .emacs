@@ -156,6 +156,8 @@
         ; docker
         dumb-jump
         ein
+        emacsql
+        emacsql-sqlite-builtin
         emojify
         exec-path-from-shell
         expand-region
