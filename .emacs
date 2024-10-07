@@ -631,6 +631,34 @@ If called with a prefix argument, ask the user for a prompt and include it in th
 
 (global-set-key (kbd "C-c l r") 'send-region-to-llm)
 
+(defun send-windows-to-llm (use-prompt)
+  "Send the contents of all displayed buffers to `llm`."
+  (interactive "P")  ; "P" for prefix argument
+  (let* ((buffers (delete-dups (mapcar 'window-buffer (window-list))))
+         (temp-file (make-temp-file "emacs-llm-"))
+         (output-buffer (generate-new-buffer-name "*LLM Output*"))
+         (prompt (if use-prompt
+                     (read-string "Prompt: ")
+                   ""))
+         (command (if use-prompt
+                      (format "cat %s | llm \"%s\"" temp-file (shell-quote-argument prompt))
+                    (format "cat %s | llm" temp-file))))
+    (with-temp-file temp-file
+      (dolist (buffer buffers)
+        (insert (format "<buffer name: %s>\n" (buffer-name buffer)))
+        (insert "----\n")
+        (insert-buffer-substring buffer)
+        (insert "\n----\n")))
+
+    ;; Start the compilation process
+    (compilation-start command
+                       'compilation-mode
+                       (lambda (_) output-buffer))
+    (with-current-buffer output-buffer
+      (setq truncate-lines nil))))
+
+(global-set-key (kbd "C-c l w") 'send-windows-to-llm)
+
 (defun send-prompt-to-llm (use-c-flag)
   "Ask the user for a prompt, then invoke `llm` in a uniquely named compilation buffer with line wrapping.
 If called with a prefix argument, add the `-c` flag to the `llm` command."
@@ -675,5 +703,22 @@ With prefix argument, run `llm chat -c` instead."
     (when default-directory
       (let ((output-buffer (generate-new-buffer-name "*Git Merge and Push*")))
         (compilation-start "(git merge master -m \"Merge branch 'master'\" && git push --no-verify) || git status"
+                           'compilation-mode
+                           (lambda (_) output-buffer))))))
+
+(defun git-update-branch ()
+  "Update the current branch by merging master and pushing without verification."
+  (interactive)
+  (let ((default-directory (magit-toplevel)))
+    (when default-directory
+      (let ((current-branch (magit-get-current-branch))
+            (output-buffer (generate-new-buffer-name "*Git Update Branch*")))
+        (compilation-start (format "(git checkout master \
+                                     && git pull \
+                                     && git checkout %s \
+                                     && git merge master -m \"Merge branch 'master'\" \
+                                     && git push --no-verify) \
+                                    || git status"
+                                   current-branch)
                            'compilation-mode
                            (lambda (_) output-buffer))))))
