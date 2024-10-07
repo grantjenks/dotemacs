@@ -610,26 +610,99 @@ If called with a prefix argument, ask the user for a prompt and include it in th
 
 (global-set-key (kbd "C-c l b") 'send-buffer-to-llm)
 
+(defvar gj-llm-state-stack nil
+  "Stack of LLM states, each containing b1, r1, a1, and original-buffer.")
+
 (defun send-region-to-llm (start end use-prompt)
-  "Write the region to a temporary file, then invoke `llm` in a uniquely named compilation buffer with line wrapping.
+  "Send the selected region to `llm` and store surrounding text on a stack for later diff.
 If called with a prefix argument, ask the user for a prompt and include it in the `llm` command."
-  (interactive "r\nP")  ; "r" for region, "P" for prefix argument
+  (interactive "r\nP")
+  ;; Create a state plist and push onto the stack
+  (push (list :b1 (buffer-substring-no-properties (point-min) start)
+              :r1 (buffer-substring-no-properties start end)
+              :a1 (buffer-substring-no-properties end (point-max))
+              :original-buffer (current-buffer))
+        gj-llm-state-stack)
+  ;; Prepare the command and output buffer
   (let* ((temp-file (make-temp-file "emacs-llm-"))
-         (output-buffer (generate-new-buffer-name "*LLM Output*"))
          (prompt (if use-prompt
                      (read-string "Prompt: ")
                    ""))
          (command (if use-prompt
-                      (format "cat %s | llm \"%s\"" temp-file (shell-quote-argument prompt))
-                    (format "cat %s | llm" temp-file))))
+                      (format "cat %s | llm %s"
+                              (shell-quote-argument temp-file)
+                              (shell-quote-argument prompt))
+                    (format "cat %s | llm"
+                            (shell-quote-argument temp-file))))
+         (output-buffer-name (generate-new-buffer-name "*LLM Output*")))
+    ;; Write the selected region to the temporary file
     (write-region start end temp-file)
+    ;; Start the compilation process
     (compilation-start command
                        'compilation-mode
-                       (lambda (_) output-buffer))
-    (with-current-buffer output-buffer
-      (setq truncate-lines nil))))
+                       (lambda (_) output-buffer-name))
+    ;; Display the output buffer
+    (let ((output-buffer (get-buffer output-buffer-name)))
+      (when output-buffer
+        (with-current-buffer output-buffer
+          (setq truncate-lines nil)
+          ;; Optional: Set read-only mode off if you want to edit the output buffer
+          (read-only-mode -1))
+        (display-buffer output-buffer)))))
 
 (global-set-key (kbd "C-c l r") 'send-region-to-llm)
+
+(defun ediff-llm-region-with-original (start end)
+  "Replace the original region with the selected LLM output and diff with the original buffer.
+Select the new region (`r2`) in the LLM output buffer or any buffer, then invoke this function."
+  (interactive "r")
+  (unless gj-llm-state-stack
+    (error "No stored LLM state. Please run `send-region-to-llm` first."))
+  ;; Get the top state from the stack
+  (let* ((state (car gj-llm-state-stack))
+         (b1 (plist-get state :b1))
+         (r1 (plist-get state :r1))
+         (a1 (plist-get state :a1))
+         (original-buffer (plist-get state :original-buffer))
+         ;; Get `r2` from the selected region
+         (r2 (buffer-substring-no-properties start end))
+         (modified-buffer-name (concat (buffer-name original-buffer) "-llm-modified"))
+         (modified-buffer (get-buffer-create modified-buffer-name)))
+    ;; Create the modified buffer with `b1 + r2 + a1`
+    (with-current-buffer modified-buffer
+      (erase-buffer)
+      (insert b1)
+      (insert r2)
+      (insert a1))
+    ;; Run ediff between the original buffer and the modified buffer
+    (ediff-buffers original-buffer modified-buffer)))
+
+(global-set-key (kbd "C-c l e") 'ediff-llm-region-with-original)
+
+(defun push-llm-state (start end)
+  "Push the current region onto the LLM state stack.
+Stores the text before the region (`b1`), the region itself (`r1`), the text after the region (`a1`), and the original buffer."
+  (interactive "r")
+  ;; Create a state plist and push onto the stack
+  (push (list :b1 (buffer-substring-no-properties (point-min) start)
+              :r1 (buffer-substring-no-properties start end)
+              :a1 (buffer-substring-no-properties end (point-max))
+              :original-buffer (current-buffer))
+        gj-llm-state-stack)
+  (message "Pushed LLM state onto the stack"))
+
+(global-set-key (kbd "C-c l o") 'pop-llm-state)
+
+(defun pop-llm-state ()
+  "Pop the last stored LLM state from the stack."
+  (interactive)
+  (if gj-llm-state-stack
+      (progn
+        (setq gj-llm-state-stack (cdr gj-llm-state-stack))
+        (message "Popped LLM state from the stack"))
+    (message "No LLM state to pop")))
+
+(global-set-key (kbd "C-c l p") 'pop-llm-state)
 
 (defun send-windows-to-llm (use-prompt)
   "Send the contents of all displayed buffers to `llm`."
