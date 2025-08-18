@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""
+c — Construct a prompt of file contents changed between master..HEAD,
+followed by the textual git diff, each wrapped by ====
+Usage:
+  ./c                       # uses 'master..HEAD'
+  ./c BASE..HEAD            # or any other git rev range
+"""
+
+import os
+import sys
+import subprocess
+
+SEP = "===="
+
+def run_git(args: list[str]) -> bytes:
+    return subprocess.check_output(["git", *args], stderr=subprocess.STDOUT)
+
+def is_inside_work_tree() -> bool:
+    try:
+        out = run_git(["rev-parse", "--is-inside-work-tree"])
+        return out.strip() == b"true"
+    except subprocess.CalledProcessError:
+        return False
+
+def detect_binary_sample(sample: bytes) -> bool:
+    # Simple heuristic: NUL byte indicates binary
+    return b"\x00" in sample
+
+def read_text_file(path: str) -> str:
+    with open(path, "rb") as f:
+        data = f.read()
+    if detect_binary_sample(data):
+        return f"[binary file omitted]"
+    # Decode as UTF-8 with replacement to avoid errors on mixed encodings
+    return data.decode("utf-8", errors="replace")
+
+def parse_name_status_z(diff_bytes: bytes):
+    """
+    Parse output of: git diff --name-status -z <range>
+    Returns a list of dicts with keys: status, path, old_path (optional)
+    Handles R/C (renames/copies) which include two paths.
+    """
+    tokens = diff_bytes.decode("utf-8", errors="replace").split("\0")
+    # Drop any trailing empty token(s)
+    while tokens and tokens[-1] == "":
+        tokens.pop()
+    i = 0
+    entries = []
+    while i < len(tokens):
+        status = tokens[i]; i += 1
+        if not status:
+            break
+        code = status.split("\t", 1)[0]  # status may include score like R100
+        if code and code[0] in ("R", "C"):
+            old_path = tokens[i]; new_path = tokens[i+1]; i += 2
+            entries.append({"status": code, "path": new_path, "old_path": old_path})
+        else:
+            path = tokens[i]; i += 1
+            entries.append({"status": code, "path": path})
+    return entries
+
+def main():
+    if not is_inside_work_tree():
+        print("Not inside a git work tree.", file=sys.stderr)
+        sys.exit(1)
+
+    rev_range = sys.argv[1] if len(sys.argv) > 1 else "master..HEAD"
+
+    print("<changes>")
+    print("git diff", rev_range)
+    print(SEP)
+    try:
+        diff_text = run_git(["diff", "--no-color", rev_range]).decode("utf-8", errors="replace")
+    except subprocess.CalledProcessError as e:
+        diff_text = e.output.decode("utf-8", errors="replace")
+
+    print(diff_text, end="" if diff_text.endswith("\n") else "\n")
+    print("</changes>")
+
+    # List changed files with status, NUL-separated for robust parsing
+    try:
+        ns = run_git(["diff", "--name-status", "-z", rev_range])
+    except subprocess.CalledProcessError as e:
+        sys.stderr.write(e.output.decode("utf-8", errors="replace"))
+        sys.exit(e.returncode)
+
+    entries = parse_name_status_z(ns)
+
+    # For deterministic order, sort by display path
+    entries.sort(key=lambda e: e.get("path") or e.get("old_path") or "")
+
+    print("<sources>")
+    for e in entries:
+        status = e["status"]
+        display_name = e.get("path") or e.get("old_path")
+        # Include status in the header if useful (e.g., D, R100, etc.)
+        if "old_path" in e and e["old_path"] != e["path"]:
+            print(f"{display_name}  (status: {status}, renamed from: {e['old_path']})")
+        else:
+            print(f"{display_name}  (status: {status})")
+        print(SEP)
+
+        # For deletions, there is no file in the working tree
+        if status.startswith("D"):
+            print("[file deleted in HEAD]")
+        else:
+            # Print current working tree contents for the file
+            try:
+                print(read_text_file(e["path"]))
+            except FileNotFoundError:
+                # If missing (e.g., path outside cwd or unusual state), try from HEAD blob
+                try:
+                    blob = run_git(["show", f"HEAD:{e['path']}"])
+                    if detect_binary_sample(blob):
+                        print("[binary file from HEAD omitted]")
+                    else:
+                        print(blob.decode("utf-8", errors="replace"))
+                except subprocess.CalledProcessError:
+                    print("[unable to read file contents]")
+
+        print(SEP)
+    print("</sources>")
+
+
+if __name__ == "__main__":
+    main()

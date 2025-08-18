@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+import argparse
+import fnmatch
+import subprocess
+import sys
+from pathlib import Path
+
+NON_SOURCE_EXTENSIONS = {".png", ".svg", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".webp"}
+
+def get_git_tracked_files(root: Path):
+    """
+    Return a set of paths (relative to root) tracked by git or untracked but not ignored.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        lines = result.stdout.splitlines()
+        return set(lines)
+    except subprocess.CalledProcessError as e:
+        print("Error running git ls-files:", e.stderr, file=sys.stderr)
+        return set()
+
+def get_all_files(root: Path):
+    """
+    Return a list of all files under root, as paths relative to root.
+    """
+    files = []
+    for p in root.rglob("*"):
+        if p.is_file():
+            try:
+                rel = p.relative_to(root)
+            except ValueError:
+                continue
+            files.append(rel)
+    return files
+
+def should_ignore(relpath: Path, ignore_globs):
+    """
+    Return True if relpath (as posix string) matches any of the ignore globs.
+    """
+    s = relpath.as_posix()
+    return any(fnmatch.fnmatch(s, pat) for pat in ignore_globs)
+
+def count_tokens(full_path: Path):
+    """
+    Count tokens in the file using ttok pipeline; skip non-source by returning 0.
+    """
+    ext = full_path.suffix.lower()
+    if ext in NON_SOURCE_EXTENSIONS:
+        return 0
+    try:
+        content = full_path.read_text(encoding="utf-8")
+    except Exception as e:
+        print(f"[Error reading {full_path}: {e}]", file=sys.stderr)
+        return 0
+    cmd = "ttok --allow-special --encode | tr ' ' '\\n' | wc -l"
+    try:
+        result = subprocess.run(
+            cmd,
+            input=content,
+            shell=True,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return int(result.stdout.strip())
+    except Exception as e:
+        print(f"[Error tokenizing {full_path}: {e}]", file=sys.stderr)
+        return 0
+
+def main():
+    # Pass through any piped stdin to stdout first
+    if not sys.stdin.isatty():
+        piped = sys.stdin.read()
+        if piped:
+            sys.stdout.write(piped)
+            sys.stdout.flush()
+
+    parser = argparse.ArgumentParser(
+        description="List and print file contents or show largest files by token count"
+    )
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        default=".",
+        help="Root directory to scan (defaults to current directory)"
+    )
+    parser.add_argument(
+        "--ignore",
+        action="append",
+        default=[],
+        help="Glob pattern for files to ignore (on paths relative to root)"
+    )
+    parser.add_argument(
+        "--largest",
+        action="store_true",
+        help="Show the top 20 files by token count instead of printing contents"
+    )
+    args = parser.parse_args()
+
+    root = Path(args.directory).resolve()
+
+    if root.is_file():
+        name = args.directory
+        try:
+            print(f'<file name="{name}">')
+            print(root.read_text(encoding="utf-8"))
+            print("</file>")
+        except Exception as exc:
+            print(f"Error reading file {name}: {exc}", file=sys.stderr)
+            sys.exit(1)
+        sys.exit(0)
+
+    if not root.is_dir():
+        print(f"Error: '{args.directory}' is not a directory.", file=sys.stderr)
+        sys.exit(1)
+
+    tracked = get_git_tracked_files(root)
+    all_files = get_all_files(root)
+    # Filter by git tracking and our ignore patterns
+    rel_files = [
+        rel for rel in all_files
+        if rel.as_posix() in tracked and not should_ignore(rel, args.ignore)
+    ]
+
+    def display_name(rel: Path):
+        if args.directory == ".":
+            return rel.as_posix()
+        return f"{args.directory.rstrip('/')}/{rel.as_posix()}"
+
+    if args.largest:
+        counts = []
+        for rel in rel_files:
+            full = root / rel
+            cnt = count_tokens(full)
+            counts.append((rel, cnt))
+        counts.sort(key=lambda x: x[1], reverse=True)
+        print("Top 20 files by token count:")
+        for rel, cnt in counts[:20]:
+            print(f"{display_name(rel)}: {cnt} tokens")
+    else:
+        # Sort by modification time
+        rel_files.sort(key=lambda rel: (root / rel).stat().st_mtime)
+        for rel in rel_files:
+            name = display_name(rel)
+            print(f'<file name="{name}">')
+            if "locales" in rel.parts:
+                print("</file>")
+                break
+            ext = rel.suffix.lower()
+            if ext in NON_SOURCE_EXTENSIONS:
+                print("...")
+            else:
+                full = root / rel
+                try:
+                    print(full.read_text(encoding="utf-8"))
+                except Exception as e:
+                    print(f"[Error reading file {name}: {e}]", file=sys.stderr)
+            print("</file>")
+
+if __name__ == "__main__":
+    main()
