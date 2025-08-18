@@ -157,7 +157,6 @@
         dumb-jump
         ein
         emacsql
-        emacsql-sqlite-builtin
         emojify
         exec-path-from-shell
         expand-region
@@ -252,6 +251,8 @@
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
 (setq lsp-pyls-configuration-sources ["flake8"])
+(setq lsp-python-server 'pylsp
+      lsp-disabled-clients '(pyright pyls ruff))
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
                   :major-modes '(python-mode)
@@ -263,9 +264,12 @@
 ; Configure iedit
 (require 'iedit)
 
-; Configure magit's forge
 (setq auth-sources '("~/.authinfo"))
 (require 'magit)
+(when (file-executable-p "/usr/local/bin/git")
+  (setq magit-git-executable "/usr/local/bin/git"))
+
+; Configure magit's forge
 (require 'forge)
 ;; (push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
 ;;       forge-alist)
@@ -342,6 +346,7 @@
         projectile-root-top-down
         projectile-root-top-down-recurring
         projectile-root-bottom-up))
+(setq projectile-enable-caching t)
 (projectile-mode t)
 
 (defadvice kill-ring-save (before slick-copy activate compile)
