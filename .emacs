@@ -179,10 +179,11 @@
         protobuf-mode
         python-black
         pyvenv
+        realgud
         rg
         rust-mode
-        quelpa
-        quelpa-use-package
+        ;; quelpa
+        ;; quelpa-use-package
         scala-mode
         solarized-theme
         swiper
@@ -250,14 +251,14 @@
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
-(setq lsp-pyls-configuration-sources ["flake8"])
+(setq lsp-pylsp-plugins-pydocstyle-enabled nil)
 (setq lsp-python-server 'pylsp
       lsp-disabled-clients '(pyright pyls ruff))
 (lsp-register-client
- (make-lsp-client :new-connection (lsp-tramp-connection "pyls")
+ (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
                   :major-modes '(python-mode)
                   :remote? t
-                  :server-id 'pyls-remote))
+                  :server-id 'pylsp-remote))
 (global-set-key (kbd "C-c i") 'lsp-mode)
 
 
@@ -564,12 +565,20 @@
 (setq aw-dispatch-always t)
 
 (require 'use-package)
-(require 'quelpa-use-package)
-(use-package copilot
-  :quelpa (copilot :fetcher github
-                   :repo "zerolfx/copilot.el"
-                   :branch "main"
-                   :files ("dist" "*.el")))
+;; (require 'quelpa-use-package)
+;; (use-package copilot
+;;   :quelpa (copilot :fetcher github
+;;                    :repo "zerolfx/copilot.el"
+;;                    :branch "main"
+;;                    :files ("dist" "*.el")))
+
+(use-package gcmh :ensure t
+  :init (setq gcmh-high-cons-threshold (* 256 1024 1024))
+  :config (gcmh-mode 1))
+
+(setq read-process-output-max (* 4 1024 1024))
+(setq process-adaptive-read-buffering nil)
+(setq process-connection-type nil)
 
 (require 'rg)
 (rg-enable-default-bindings)
@@ -800,3 +809,17 @@ With prefix argument, run `llm chat -c` instead."
                                    current-branch)
                            'compilation-mode
                            (lambda (_) output-buffer))))))
+
+(use-package fzf
+  :ensure t
+  :bind (("C-c z" . fzf-git))
+  :config
+  (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
+        fzf/executable "fzf"
+        fzf/git-grep-args "-i --line-number %s"
+        ;; command used for `fzf-grep-*` functions
+        fzf/grep-command "rg --no-heading -nH"
+        ;; fzf/grep-command "grep -nrH"
+        ;; If nil, the fzf buffer will appear at the top of the window
+        fzf/position-bottom t
+        fzf/window-height 15))
