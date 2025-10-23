@@ -810,6 +810,8 @@ With prefix argument, run `llm chat -c` instead."
                            'compilation-mode
                            (lambda (_) output-buffer))))))
 
+(setenv "FZF_DEFAULT_COMMAND" "rg --files")
+
 (use-package fzf
   :ensure t
   :bind (("C-c z" . fzf-git))
@@ -823,3 +825,47 @@ With prefix argument, run `llm chat -c` instead."
         ;; If nil, the fzf buffer will appear at the top of the window
         fzf/position-bottom t
         fzf/window-height 15))
+
+(use-package vterm
+  :ensure t
+  :commands (vterm vterm-other-window)
+  :init
+  (setq vterm-max-scrollback 100000
+        vterm-buffer-name-string "vterm:%s"
+        vterm-kill-buffer-on-exit nil)
+  :config
+  (define-key vterm-mode-map (kbd "C-c C-j") #'vterm-copy-mode)
+  (define-key vterm-copy-mode-map (kbd "C-c C-k") #'vterm-copy-mode)
+  (define-key vterm-mode-map (kbd "C-c C-l") #'vterm-clear-scrollback))
+
+(global-tab-line-mode 1)
+(global-set-key (kbd "C-{") #'tab-line-switch-to-prev-tab)
+(global-set-key (kbd "C-}") #'tab-line-switch-to-next-tab)
+(global-set-key (kbd "C-x t k") #'bury-buffer)
+
+(defun copy-path-relative-to-repo-root ()
+  "Copy the current file's path to the clipboard.
+If the file is inside a version-controlled repository, copy the path
+relative to the repository root. Otherwise copy the absolute path.
+Works in file-visiting buffers and Dired."
+  (interactive)
+  (let* ((file (or (buffer-file-name)
+                   (and (derived-mode-p 'dired-mode)
+                        (dired-get-filename nil t)))))
+    (unless file
+      (user-error "No file associated with this buffer"))
+    (let* ((root (or (and (fboundp 'vc-root-dir) (vc-root-dir))
+                     (locate-dominating-file file ".git")
+                     (locate-dominating-file file ".hg")
+                     (locate-dominating-file file ".bzr")
+                     (locate-dominating-file file ".svn")))
+           (path (if root
+                     (file-relative-name (expand-file-name file)
+                                         (expand-file-name root))
+                   (expand-file-name file))))
+      (kill-new path)
+      (when (and (fboundp 'gui-set-selection) (display-graphic-p))
+        (gui-set-selection 'CLIPBOARD path))
+      (message "Copied: %s" path))))
+
+(global-set-key (kbd "C-c c") #'copy-path-relative-to-repo-root)
