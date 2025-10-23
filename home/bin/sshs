@@ -3,4 +3,4 @@
 # Symlinks:
 # $HOME/bin/sshs
 
-ssh -t $1 screen -RR -S $2
+ssh -t $1 screen -d -RR -S $2
