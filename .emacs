@@ -192,10 +192,23 @@
         which-key
         yaml-mode
         ))
+(defun package-archive-stale-p (&optional archive max-age-days)
+  "Whether ARCHIVE metadata is missing or older than MAX-AGE-DAYS."
+  (let* ((archive (or archive "melpa"))
+         (max-age-seconds (* (or max-age-days 7) 24 60 60))
+         (archive-file (expand-file-name
+                        (format "elpa/archives/%s/archive-contents" archive)
+                        user-emacs-directory)))
+    (if (not (file-exists-p archive-file))
+        t
+      (> (float-time (time-since (nth 5 (file-attributes archive-file))))
+         max-age-seconds))))
+
 (defun install-packages ()
   "Install all selected packages."
   (interactive)
-  (unless package-archive-contents
+  (when (or (not package-archive-contents)
+            (package-archive-stale-p "melpa" 7))
     (package-refresh-contents))
   (dolist (package package-selected-packages)
     (unless (package-installed-p package)
