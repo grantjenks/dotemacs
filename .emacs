@@ -720,7 +720,7 @@ Stores the text before the region (`b1`), the region itself (`r1`), the text aft
         gj-llm-state-stack)
   (message "Pushed LLM state onto the stack"))
 
-(global-set-key (kbd "C-c l o") 'pop-llm-state)
+(global-set-key (kbd "C-c l u") 'push-llm-state)
 
 (defun pop-llm-state ()
   "Pop the last stored LLM state from the stack."
@@ -731,7 +731,7 @@ Stores the text before the region (`b1`), the region itself (`r1`), the text aft
         (message "Popped LLM state from the stack"))
     (message "No LLM state to pop")))
 
-(global-set-key (kbd "C-c l p") 'pop-llm-state)
+(global-set-key (kbd "C-c l o") 'pop-llm-state)
 
 (defun send-windows-to-llm (use-prompt)
   "Send the contents of all displayed buffers to `llm`."
