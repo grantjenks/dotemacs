@@ -113,7 +113,7 @@
         auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
         backup-directory-alist `(("." . ,backup-dir))
         tramp-auto-save-directory auto-saves-dir)
-        tramp-backup-directory-alist `((".*" . ,backup-dir)))
+  tramp-backup-directory-alist `((".*" . ,backup-dir)))
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;; Hide window bars.
@@ -146,6 +146,7 @@
 (setq package-selected-packages
       '(
         ace-window
+        apheleia
         bazel
         company
         concurrent
@@ -153,7 +154,7 @@
         cython-mode
         dired-narrow
         dired-subtree
-        ; docker
+        ;; docker
         dumb-jump
         ein
         emacsql
@@ -203,6 +204,7 @@
 (install-packages)
 
 (when (memq window-system '(mac ns x))
+  (require 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
 ;; Don't change the font for some headings and titles
@@ -216,9 +218,9 @@
 (load-theme 'solarized-light t)
 
 ;; Font setup
-; (package-install 'fira-code-mode)
-; (fira-code-mode-install-fonts)
-; (global-fira-code-mode)
+;; (package-install 'fira-code-mode)
+;; (fira-code-mode-install-fonts)
+;; (global-fira-code-mode)
 
 ;; Configure undo tree mode -> C-x u
 (global-undo-tree-mode t)
@@ -262,7 +264,7 @@
 (global-set-key (kbd "C-c i") 'lsp-mode)
 
 
-; Configure iedit
+;; Configure iedit
 (require 'iedit)
 
 (setq auth-sources '("~/.authinfo"))
@@ -270,26 +272,26 @@
 (when (file-executable-p "/usr/local/bin/git")
   (setq magit-git-executable "/usr/local/bin/git"))
 
-; Configure magit's forge
+;; Configure magit's forge
 (require 'forge)
 ;; (push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
 ;;       forge-alist)
 
-; Configure dumb-jump
+;; Configure dumb-jump
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 
 ;; Old findstr.exe command.
-;(defvar findstr-args-history nil)
-;(defun findstr (dir cmd)
-;  "Windows findstr.exe like rgrep."
-;  (interactive
-;   (list
-;    (read-from-minibuffer "Directory: " default-directory)
-;    (read-from-minibuffer "Arguments: " nil nil nil 'findstr-args-history)))
-;  (setq old-default-directory default-directory)
-;  (cd dir)
-;  (compilation-start (format "findstr.exe %s" cmd) 'grep-mode)
-;  (cd old-default-directory))
+;;(defvar findstr-args-history nil)
+;;(defun findstr (dir cmd)
+;;  "Windows findstr.exe like rgrep."
+;;  (interactive
+;;   (list
+;;    (read-from-minibuffer "Directory: " default-directory)
+;;    (read-from-minibuffer "Arguments: " nil nil nil 'findstr-args-history)))
+;;  (setq old-default-directory default-directory)
+;;  (cd dir)
+;;  (compilation-start (format "findstr.exe %s" cmd) 'grep-mode)
+;;  (cd old-default-directory))
 
 (eval-after-load "grep"
   '(progn
@@ -328,7 +330,7 @@
 (require 'multiple-cursors)
 (global-unset-key "\C-xm")
 (global-set-key (kbd "C-x m a") 'mc/mark-all-like-this)
-; ^-- requires transient mark. Use C-space C-space to deactivate after C-x m a.
+;; ^-- requires transient mark. Use C-space C-space to deactivate after C-x m a.
 (global-set-key (kbd "C-x m s") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-x m r") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-x m i") 'mc/mark-more-like-this-extended)
@@ -438,8 +440,8 @@
 (setq ivy-use-selectable-prompt t)
 (setq ivy-use-virtual-buffers t)
 
-; (require 'docker)
-; (global-set-key (kbd "C-x d") 'docker)
+;; (require 'docker)
+;; (global-set-key (kbd "C-x d") 'docker)
 
 (setq c-basic-offset 2)
 (setq c-default-style '((java-mode . "java")
@@ -478,7 +480,7 @@
 (global-set-key (kbd "C-c t r") 'recompile)
 
 (autoload 'markdown-mode "markdown-mode"
-   "Major mode for editing Markdown files" t)
+  "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
@@ -494,7 +496,7 @@
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (setq web-mode-engines-alist
       '(("django" . "\\.html\\'"))
-)
+      )
 (add-hook 'web-mode-hook
           (lambda ()
             (setq web-mode-markup-indent-offset 2)))
@@ -869,3 +871,29 @@ Works in file-visiting buffers and Dired."
       (message "Copied: %s" path))))
 
 (global-set-key (kbd "C-c c") #'copy-path-relative-to-repo-root)
+
+
+(require 'treesit)
+(setq treesit-language-source-alist
+      '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
+(dolist (lang '(typescript tsx))
+  (unless (treesit-language-available-p lang)
+    (treesit-install-language-grammar lang)))
+(add-to-list 'auto-mode-alist '("\\.ts\\'"  . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+
+
+(require 'eglot)
+(add-to-list 'eglot-server-programs
+             '((typescript-ts-mode tsx-ts-mode js-ts-mode)
+               . ("typescript-language-server" "--stdio")))
+
+(add-hook 'typescript-ts-mode-hook #'eglot-ensure)
+(add-hook 'tsx-ts-mode-hook #'eglot-ensure)
+
+
+(require 'apheleia)
+(add-to-list 'apheleia-mode-alist '(typescript-ts-mode . prettier))
+(add-to-list 'apheleia-mode-alist '(tsx-ts-mode . prettier))
+;; (apheleia-global-mode +1)
