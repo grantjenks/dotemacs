@@ -1,6 +1,6 @@
 # Screen RC
 # Symlinks:
-# $HOME/.screenrc
+#   $HOME/.screenrc
 
 startup_message off
 
@@ -8,10 +8,12 @@ startup_message off
 shell -$SHELL
 
 # Change the command and meta characters from C-a to C-z.
+# NOTE: this steals the usual shell "suspend" keybinding.
 escape ^za
 
 # Keep many lines of scrollback.
 defscrollback 9999
+scrollback 9999
 
 # Use bright colors for bold text.
 attrcolor b ".I"
@@ -19,9 +21,14 @@ attrcolor b ".I"
 # Select utf-8 as default character encoding.
 defutf8 on
 
+# Prefer 256-color terminal if your client supports it (Termius usually does).
+# If you notice any weirdness, comment this out.
+term xterm-256color
+
 # Control the display of the window captions.
 caption always
 caption string "screen %S %t"
 
-# Enable mouse scrolling and scroll bar history scrolling.
+# Enable mouse scrolling and scroll bar history scrolling (xterm-like terminals).
+# Disables alternate-screen enter/exit sequences, which can help scroll behavior.
 termcapinfo xterm* ti@:te@
