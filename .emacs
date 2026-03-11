@@ -266,9 +266,10 @@
 (require 'lsp-mode)
 (setq lsp-enable-snippet nil)
 (setq lsp-prefer-flymake nil)
+(setq lsp-enable-file-watchers nil)
 (setq lsp-pylsp-plugins-pydocstyle-enabled nil)
 (setq lsp-python-server 'pylsp
-      lsp-disabled-clients '(pyright pyls ruff))
+      lsp-disabled-clients '(pyright pyls ruff ty-ls))
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
                   :major-modes '(python-mode)
