@@ -292,6 +292,7 @@
 ;;       forge-alist)
 
 ;; Configure dumb-jump
+(setq xref-auto-jump-to-first-xref 'show)
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 
 ;; Old findstr.exe command.
