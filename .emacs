@@ -520,6 +520,10 @@
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (setq truncate-lines nil)
+            (setq word-wrap t)))
 
 (setq ein:output-area-inlined-images t)
 (face-spec-set
