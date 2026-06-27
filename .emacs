@@ -282,14 +282,20 @@
 (require 'iedit)
 
 (setq auth-sources '("~/.authinfo"))
+
+;; Configure Magit.
+;;
+;; Set these before loading Magit.  The second setting is a safety net:
+;; even if something turns Magit's auto-revert mode back on, it won't run
+;; `git ls-files --error-unmatch` for every opened file.
+(setq magit-auto-revert-mode nil
+      magit-auto-revert-tracked-only nil)
 (require 'magit)
+(require 'magit-autorevert)
+;; Remove Magit's file-opening hook after the implementation is loaded.
+(magit-auto-revert-mode -1)
 (when (file-executable-p "/usr/local/bin/git")
   (setq magit-git-executable "/usr/local/bin/git"))
-
-;; Configure magit's forge
-(require 'forge)
-;; (push '("linkedin.githubprivate.com" "api.linkedin.githubprivate.com" "linkedin.githubprivate.com" forge-github-repository)
-;;       forge-alist)
 
 ;; Configure dumb-jump
 (setq xref-auto-jump-to-first-xref 'show)
@@ -366,6 +372,22 @@
         projectile-root-bottom-up))
 (setq projectile-enable-caching t)
 (projectile-mode t)
+
+(require 'projectile)
+(define-key projectile-mode-map
+            (kbd "C-c p")
+            #'projectile-command-map)
+(setq projectile-project-search-path '("~/repos/" "~/code/")
+      projectile-sort-order 'recently-active
+      projectile-switch-project-action (lambda ()
+                                         (message "Changing to project: %s" default-directory)
+                                         (projectile-dired))
+      ;; Let rg/fd/git enumerate files instead of Emacs Lisp.
+      projectile-indexing-method 'alien
+      ;; Keep the cache, but don't scan it whenever a file is opened.
+      projectile-enable-caching t
+      projectile-auto-update-cache nil)
+(projectile-mode 1)
 
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
@@ -600,18 +622,6 @@
 (require 'rg)
 (rg-enable-default-bindings)
 
-(defun open-github-pr ()
-  "Open a new GitHub pull request in the default browser using the current branch."
-  (interactive)
-  (let* ((current-branch (magit-get-current-branch))
-         (remote-url (magit-get "remote" "origin" "url"))
-         (github-url (if (string-match "github\\.com[:/]\\(.*?\\)\\.git$" remote-url)
-                         (match-string 1 remote-url)
-                       (error "Could not parse GitHub URL")))
-         (pr-url (format "https://github.com/%s/compare/%s?expand=1" github-url current-branch)))
-    (browse-url pr-url)))
-(global-set-key (kbd "C-c m p") 'open-github-pr)
-
 (require 'which-key)
 (which-key-mode)
 
@@ -799,16 +809,6 @@ With prefix argument, run `llm chat -c` instead."
       (pop-to-buffer buffer-name))))
 
 (global-set-key (kbd "C-c l c") 'run-llm-chat)
-
-(defun git-update-branch ()
-  "Merge master and push without verification from the root git directory."
-  (interactive)
-  (let ((default-directory (magit-toplevel)))
-    (when default-directory
-      (let ((output-buffer (generate-new-buffer-name "*Git Merge and Push*")))
-        (compilation-start "(git merge master -m \"Merge branch 'master'\" && git push --no-verify) || git status"
-                           'compilation-mode
-                           (lambda (_) output-buffer))))))
 
 (defun git-update-branch ()
   "Update the current branch by merging master and pushing without verification."
